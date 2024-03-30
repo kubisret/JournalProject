@@ -28,7 +28,7 @@ def login():
 
         print(f'Username: {username}, Password: {password}, {remember_me}')
 
-    return render_template('login.html')
+    return render_template('login.html', title='Регистрация')
 
 
 @app.route('/register', methods=['GET', 'POST'])

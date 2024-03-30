@@ -11,12 +11,12 @@
     <h1 class="h3 mb-3 fw-normal">Войдите в систему</h1>
 
     <div class="form-floating">
-      <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-      <label for="floatingInput">Электронный адрес</label>
+      <input name="email" type="email" class="form-control" id="label-email-login" placeholder="name@example.com">
+      <label for="label-email-login">Электронный адрес</label>
     </div>
     <div class="form-floating">
-      <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-      <label for="floatingPassword">Пароль</label>
+      <input name="password" type="password" class="form-control" id="label-password-login" placeholder="Password">
+      <label for="label-password-login">Пароль</label>
     </div>
 
     <div class="form-check text-start my-3">
@@ -26,6 +26,8 @@
       </label>
     </div>
     <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+    <br><br>
+    <p><a class="link-opacity-100" href="/register">Не зарегистрированы в системе?</a></p>
   </form>
 </main>
 {% endblock %}

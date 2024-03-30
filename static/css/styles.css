@@ -73,3 +73,17 @@ main {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
 }
+
+
+
+
+#label-email-login {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#label-password-login {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
