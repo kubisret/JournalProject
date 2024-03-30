@@ -74,7 +74,7 @@ def reqister():
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
-    return render_template('register.html', title='Регистрация', form=form)
+    return render_template('reset_password_request.html', title='Регистрация', form=form)
 
 
 if __name__ == '__main__':
