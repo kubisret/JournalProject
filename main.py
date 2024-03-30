@@ -9,8 +9,8 @@ app.config['SECRET_KEY'] = 'journalproject_secret_key'
 
 
 def main():
-    db_session.global_init("db/blogs.db")
-    app.run(debug=True)
+    db_session.global_init("db/journal.db")
+    app.run()
 
 
 @app.route('/')
@@ -24,7 +24,7 @@ def login():
     if request.method == 'POST':
         username = request.form['email']
         password = request.form['password']
-        remember_me = request.form['remember_me']
+        remember_me = True if request.form.get('remember_me', False) else False
 
         print(f'Username: {username}, Password: {password}, {remember_me}')
 
