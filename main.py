@@ -1,4 +1,6 @@
 from flask import Flask, url_for, render_template, redirect, request
+from flask_login import LoginManager, login_user
+
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
 from data import db_session
@@ -6,6 +8,9 @@ from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'journalproject_secret_key'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 def main():
@@ -19,16 +24,25 @@ def index():
     return render_template('index.html', title='Электронный журнал')
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['email']
-        password = request.form['password']
-        remember_me = True if request.form.get('remember_me', False) else False
-
-        print(f'Username: {username}, Password: {password}, {remember_me}')
-
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html',
+                               message="Неправильная почта или пароль",
+                               form=form)
+    return render_template('login.html', title='Авторизация', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
