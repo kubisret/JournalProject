@@ -2,7 +2,8 @@
 
 {% block content %}
 <main class="form-signin w-100 m-auto">
-  <form method="POST">
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
     <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
       <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
       <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
@@ -11,22 +12,35 @@
     <h1 class="h3 mb-3 fw-normal">Войдите в систему</h1>
 
     <div class="form-floating">
-      <input name="email" type="email" class="form-control" id="label-email-login" placeholder="name@example.com">
-      <label for="label-email-login">Электронный адрес</label>
+        {{ form.email(class="form-control", id="floatingInput", type="email", placeholder="name@example.com") }}
+        <label for="floatingInput">Электронный адрес</label>
+        {% for error in form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
     </div>
     <div class="form-floating">
-      <input name="password" type="password" class="form-control" id="label-password-login" placeholder="Password">
-      <label for="label-password-login">Пароль</label>
+        {{ form.password(class="form-control", id="floatingPassword", type="password", placeholder="Password") }}
+        <label for="floatingPassword">Пароль</label>
+        {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
     </div>
 
     <div class="form-check text-start my-3">
-      <input name="remember_me" class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
-        Запомнить меня
-      </label>
+        {{ form.remember_me(class="form-check-input", id="flexCheckDefault", placeholder="name@example.com") }}
+        <label class="form-check-label" for="flexCheckDefault">Запомнить меня</label>
+        {% for error in form.remember_me.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
     </div>
-    <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
-    <br><br>
+        {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
+    <div>{{ message }}</div>
     <p><a class="link-opacity-100" href="/register">Не зарегистрированы в системе?</a></p>
   </form>
 </main>
