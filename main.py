@@ -1,5 +1,5 @@
-from flask import Flask, url_for, render_template, redirect, request
-from flask_login import LoginManager, login_user
+from flask import Flask, url_for, render_template, redirect, request, session
+from flask_login import LoginManager, login_user, login_required, logout_user
 
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
@@ -28,6 +28,13 @@ def index():
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 @app.route('/login', methods=['GET', 'POST'])
