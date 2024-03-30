@@ -12,8 +12,8 @@
     <h1 class="h3 mb-3 fw-normal">Войдите в систему</h1>
 
     <div class="form-floating">
-        {{ form.email(class="form-control", id="label-email-login", type="email", placeholder="name@example.com") }}
-        <label for="label-email-login">Электронный адрес</label>
+        {{ form.email(class="form-control", id="floatingInput", type="email", placeholder="name@example.com") }}
+        <label for="floatingInput">Электронный адрес</label>
         {% for error in form.email.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -21,8 +21,8 @@
             {% endfor %}
     </div>
     <div class="form-floating">
-        {{ form.password(class="form-control", id="label-password-login", type="password", placeholder="Password") }}
-        <label for="label-password-login">Пароль</label>
+        {{ form.password(class="form-control", id="floatingPassword", type="password", placeholder="Password") }}
+        <label for="floatingPassword">Пароль</label>
         {% for error in form.password.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -41,8 +41,7 @@
     </div>
         {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
     <div>{{ message }}</div>
-    <br>
-    <p><a class="link-opacity-100" href="/register">Еще не зарегистрированы?</a></p>
+    <p><a class="link-opacity-100" href="/register">Не зарегистрированы в системе?</a></p>
   </form>
 </main>
 {% endblock %}
