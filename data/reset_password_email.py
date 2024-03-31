@@ -1,7 +1,7 @@
 from flask import render_template_string, url_for
 from flask_mailman import EmailMessage
 
-from static/message/reset_password_email_content import reset_password_email_html_content
+from static.message.reset_password_email_html_content import reset_password_email_html_content
 
 
 def send_reset_password_email(user, app):
