@@ -19,7 +19,7 @@ def send_reset_password_email(user, app):
     message = EmailMessage(
         subject="Reset your password",
         body=email_body,
-        to=[user.email],
+        to=[user.email]
     )
     message.content_subtype = "html"
 

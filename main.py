@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, url_for, render_template, redirect, request, session, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_mailman import Mail
 
 from data.reset_password_email import send_reset_password_email
 from forms.login_form import LoginForm
@@ -12,6 +13,13 @@ from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'journalproject_secret_key'
+mail = Mail(app)
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_DEFAULT_SENDER'] = 'dubelmag@mail.ru'
+app.config['MAIL_USERNAME'] = 'dubelmag@mail.ru'
+app.config['MAIL_PASSWORD'] = 'qwerty123;56'
 
 login_manager = LoginManager()
 login_manager.init_app(app)

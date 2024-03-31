@@ -26,7 +26,7 @@ class User(SqlAlchemyBase, UserMixin):
     def generate_reset_password_token(self, app):
         serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
-        return serializer.dumps(self.email, salt=self.password_hash)
+        return serializer.dumps(self.email, salt=self.hashed_password)
 
     @staticmethod
     def validate_reset_password_token(token: str, user_id: int, db_sess, app):
@@ -40,7 +40,7 @@ class User(SqlAlchemyBase, UserMixin):
             token_user_email = serializer.loads(
                 token,
                 max_age=app.config["RESET_PASS_TOKEN_MAX_AGE"],
-                salt=user.password_hash,
+                salt=user.hashed_password,
             )
         except (BadSignature, SignatureExpired):
             return None
