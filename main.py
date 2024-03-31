@@ -1,7 +1,7 @@
 from flask import Flask, url_for, render_template, redirect, request, session
 from flask_login import LoginManager, login_user, login_required, logout_user
-
 from forms.login_form import LoginForm
+from forms.reset_forms import ResetPasswordRequestForm
 from forms.user import RegisterForm
 from data import db_session
 from data.users import User
@@ -74,6 +74,16 @@ def reqister():
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
+    return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        if not db_sess.query(User).filter(User.email == form.email.data).first():
+            return redirect('/register')
     return render_template('reset_password_request.html', title='Регистрация', form=form)
 
 
