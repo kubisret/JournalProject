@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, url_for, render_template, redirect, request, session, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -16,6 +18,8 @@ login_manager.init_app(app)
 
 
 def main():
+    if not os.path.exists('db'):
+        os.makedirs('db')
     db_session.global_init("db/journal.db")
     app.run()
 
