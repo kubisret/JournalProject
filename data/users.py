@@ -1,7 +1,7 @@
 import datetime
 import sqlalchemy
 from flask_login import UserMixin
-from itsdangerous import URLSafeTimedSerializer
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
 from .db_session import SqlAlchemyBase
 
@@ -27,3 +27,25 @@ class User(SqlAlchemyBase, UserMixin):
         serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
         return serializer.dumps(self.email, salt=self.password_hash)
+
+    @staticmethod
+    def validate_reset_password_token(token: str, user_id: int, db_sess, app):
+        user = db_sess.query(User).get(user_id)
+
+        if user is None:
+            return None
+
+        serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+        try:
+            token_user_email = serializer.loads(
+                token,
+                max_age=app.config["RESET_PASS_TOKEN_MAX_AGE"],
+                salt=user.password_hash,
+            )
+        except (BadSignature, SignatureExpired):
+            return None
+
+        if token_user_email != user.email:
+            return None
+
+        return user

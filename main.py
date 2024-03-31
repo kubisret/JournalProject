@@ -117,8 +117,8 @@ def reset_password_request():
 def reset_password(token, user_id):
     if current_user.is_authenticated:
         return redirect("/index")
-
-    user = User.validate_reset_password_token(token, user_id)
+    db_sess = db_session.create_session()
+    user = User.validate_reset_password_token(token, user_id, db_sess, app)
     if not user:
         return render_template(
             "reset_password_error.html", title="Reset Password error"
@@ -126,7 +126,6 @@ def reset_password(token, user_id):
 
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        db_sess = db_session.create_session()
         user.set_password(form.password.data)
         db_sess.commit()
 

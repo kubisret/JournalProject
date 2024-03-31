@@ -6,7 +6,7 @@ from static.message.reset_password_email_html_content import reset_password_emai
 
 def send_reset_password_email(user, app):
     reset_password_url = url_for(
-        "auth.reset_password",
+        "reset_password",
         token=user.generate_reset_password_token(app),
         user_id=user.id,
         _external=True,
