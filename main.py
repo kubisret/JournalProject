@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, redirect, request, session
+from flask import Flask, url_for, render_template, redirect, request, session, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.login_form import LoginForm
 from forms.reset_forms import ResetPasswordRequestForm
@@ -91,8 +91,19 @@ def reset_password_request():
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        if not db_sess.query(User).filter(User.email == form.email.data).first():
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if not user:
             return redirect('/register')
+        else:
+            send_reset_password_email(user)
+
+            flash(
+                "Instructions to reset your password were sent to your email address,"
+                " if it exists in our system."
+            )
+
+            return redirect("/reset_password_request")
+
     return render_template('reset_password_request.html', title='Регистрация', form=form)
 
 
