@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 
 from data.reset_password_email import send_reset_password_email
 from forms.login_form import LoginForm
-from forms.reset_forms import ResetPasswordRequestForm
+from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.user import RegisterForm
 from data import db_session
 from data.users import User
@@ -111,6 +111,32 @@ def reset_password_request():
             return redirect("/reset_password_request")
 
     return render_template('reset_password_request.html', title='Регистрация', form=form)
+
+
+@app.route("/reset_password/<token>/<int:user_id>", methods=["GET", "POST"])
+def reset_password(token, user_id):
+    if current_user.is_authenticated:
+        return redirect("/index")
+
+    user = User.validate_reset_password_token(token, user_id)
+    if not user:
+        return render_template(
+            "reset_password_error.html", title="Reset Password error"
+        )
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user.set_password(form.password.data)
+        db_sess.commit()
+
+        return render_template(
+            "reset_password_success.html", title="Reset Password success"
+        )
+
+    return render_template(
+        "reset_password.html", title="Reset Password", form=form
+    )
 
 
 if __name__ == '__main__':
