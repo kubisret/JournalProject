@@ -1,16 +1,13 @@
 reset_password_email_html_content = """
-<p>Hello,</p>
-<p>You are receiving this email because you requested a password reset for your account.</p>
+<p>Здравствуйте!</p>
+<p>Вы получили это письмо, поскольку запросили сброс пароля для своей учетной записи.</p>
 <p>
-    To reset your password
-    <a href="{{ reset_password_url }}">click here</a>.
+    Чтобы сбросить пароль, 
+    <a href="{{ reset_password_url }}">нажмите здесь</a>.
 </p>
 <p>
-    Alternatively, you can paste the following link in your browser's address bar: <br>
+    Вы также можете вставить следующую ссылку в адресную строку браузера: <br>
     {{ reset_password_url }}
 </p>
-<p>If you have not requested a password reset please contact someone from the development team.</p>
-<p>
-    Thank you!
-</p>
+<p>Если вы не запрашивали сброс пароля, просто проигнорируйте данное сообщение.</p>
 """
