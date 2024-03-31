@@ -16,9 +16,9 @@ app.config['SECRET_KEY'] = 'journalproject_secret_key'
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'journal1234coop@gmail.com'
-app.config['MAIL_USERNAME'] = 'journal1234coop@gmail.com'
-app.config['MAIL_PASSWORD'] = 'qwerty51243'
+app.config['MAIL_DEFAULT_SENDER'] = 'idusernoreply@gmail.com'
+app.config['MAIL_USERNAME'] = 'idusernoreply@gmail.com'
+app.config['MAIL_PASSWORD'] = 'vfbxqikiznuhkncd'
 
 mail = Mail(app)
 login_manager = LoginManager()
