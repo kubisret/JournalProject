@@ -12,7 +12,7 @@ from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.user import RegisterForm
 
 blueprint = flask.Blueprint(
-    'users_funciton',
+    'users_function',
     __name__,
     template_folder='templates'
 )
