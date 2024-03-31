@@ -1,5 +1,5 @@
 from flask import Flask, url_for, render_template, redirect, request, session
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.login_form import LoginForm
 from forms.reset_forms import ResetPasswordRequestForm
 from forms.user import RegisterForm
@@ -39,6 +39,9 @@ def logout():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect("/index")
+
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -54,6 +57,9 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
+    if current_user.is_authenticated:
+        return redirect("/index")
+
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
@@ -79,6 +85,9 @@ def reqister():
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect("/index")
+
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
