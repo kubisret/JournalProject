@@ -13,14 +13,14 @@ from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'journalproject_secret_key'
-mail = Mail(app)
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'dubelmag@mail.ru'
-app.config['MAIL_USERNAME'] = 'dubelmag@mail.ru'
-app.config['MAIL_PASSWORD'] = 'qwerty123;56'
+app.config['MAIL_DEFAULT_SENDER'] = 'journal1234coop@gmail.com'
+app.config['MAIL_USERNAME'] = 'journal1234coop@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qwerty51243'
 
+mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -29,6 +29,7 @@ def main():
     if not os.path.exists('db'):
         os.makedirs('db')
     db_session.global_init("db/journal.db")
+
     app.run()
 
 
