@@ -1,5 +1,7 @@
 from flask import Flask, url_for, render_template, redirect, request, session, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
+from data.reset_password_email import send_reset_password_email
 from forms.login_form import LoginForm
 from forms.reset_forms import ResetPasswordRequestForm
 from forms.user import RegisterForm
@@ -95,7 +97,7 @@ def reset_password_request():
         if not user:
             return redirect('/register')
         else:
-            send_reset_password_email(user)
+            send_reset_password_email(user, app)
 
             flash(
                 "Instructions to reset your password were sent to your email address,"
