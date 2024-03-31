@@ -19,6 +19,7 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_DEFAULT_SENDER'] = 'idusernoreply@gmail.com'
 app.config['MAIL_USERNAME'] = 'idusernoreply@gmail.com'
 app.config['MAIL_PASSWORD'] = 'vfbxqikiznuhkncd'
+app.config["RESET_PASS_TOKEN_MAX_AGE"] = 60 * 60 * 2
 
 mail = Mail(app)
 login_manager = LoginManager()
@@ -117,9 +118,9 @@ def reset_password_request():
                 " if it exists in our system."
             )
 
-            return redirect("/reset_password_request")
+            render_template('reset_password_request.html', form=form)
 
-    return render_template('reset_password_request.html', title='Регистрация', form=form)
+    return render_template('reset_password_request.html', form=form)
 
 
 @app.route("/reset_password/<token>/<int:user_id>", methods=["GET", "POST"])
