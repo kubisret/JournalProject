@@ -23,23 +23,23 @@ class User(SqlAlchemyBase, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
-    def generate_reset_password_token(self, app):
-        serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+    def generate_reset_password_token(self, config):
+        serializer = URLSafeTimedSerializer(config["SECRET_KEY"])
 
         return serializer.dumps(self.email, salt=self.hashed_password)
 
     @staticmethod
-    def validate_reset_password_token(token: str, user_id: int, db_sess, app):
+    def validate_reset_password_token(token: str, user_id: int, db_sess, config):
         user = db_sess.query(User).get(user_id)
 
         if user is None:
             return None
 
-        serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+        serializer = URLSafeTimedSerializer(config["SECRET_KEY"])
         try:
             token_user_email = serializer.loads(
                 token,
-                max_age=app.config["RESET_PASS_TOKEN_MAX_AGE"],
+                max_age=config["RESET_PASS_TOKEN_MAX_AGE"],
                 salt=user.hashed_password,
             )
         except (BadSignature, SignatureExpired):

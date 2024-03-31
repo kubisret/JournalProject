@@ -1,3 +1,4 @@
+import json
 import os
 
 from flask import Flask, render_template
@@ -9,14 +10,11 @@ from data import db_session
 from data.users import User
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'journalproject_secret_key'
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'idusernoreply@gmail.com'
-app.config['MAIL_USERNAME'] = 'idusernoreply@gmail.com'
-app.config['MAIL_PASSWORD'] = 'vfbxqikiznuhkncd'
-app.config["RESET_PASS_TOKEN_MAX_AGE"] = 60 * 60 * 2
+
+with open('config.json', 'r', encoding='utf-8') as config_file:
+    config = json.load(config_file)
+for key, val in config.items():
+    app.config[key] = val
 
 mail = Mail(app)
 login_manager = LoginManager()

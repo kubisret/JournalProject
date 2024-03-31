@@ -1,3 +1,5 @@
+import json
+
 import flask
 from flask import redirect, render_template, flash
 from flask_login import login_manager, login_required, logout_user, current_user, login_user
@@ -14,6 +16,9 @@ blueprint = flask.Blueprint(
     __name__,
     template_folder='templates'
 )
+
+with open('config.json', 'r', encoding='utf-8') as config_file:
+    config = json.load(config_file)
 
 
 @blueprint.route('/logout')
@@ -81,7 +86,7 @@ def reset_password_request():
         if not user:
             return redirect('/register')
         else:
-            send_reset_password_email(user, blueprint)
+            send_reset_password_email(user, config)
 
             flash(
                 "Instructions to reset your password were sent to your email address,"
@@ -98,7 +103,7 @@ def reset_password(token, user_id):
     if current_user.is_authenticated:
         return redirect("/index")
     db_sess = db_session.create_session()
-    user = User.validate_reset_password_token(token, user_id, db_sess, blueprint)
+    user = User.validate_reset_password_token(token, user_id, db_sess, config)
     if not user:
         return render_template(
             "reset_password_error.html", title="Reset Password error"

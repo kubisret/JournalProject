@@ -4,10 +4,10 @@ from flask_mailman import EmailMessage
 from static.message.reset_password_email_html_content import reset_password_email_html_content
 
 
-def send_reset_password_email(user, app):
+def send_reset_password_email(user, config):
     reset_password_url = url_for(
         "reset_password",
-        token=user.generate_reset_password_token(app),
+        token=user.generate_reset_password_token(config),
         user_id=user.id,
         _external=True,
     )
