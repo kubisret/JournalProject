@@ -12,9 +12,8 @@ class User(SqlAlchemyBase, UserMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    # role = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
-    is_confirm = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
+    is_confirm = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
@@ -24,13 +23,12 @@ class User(SqlAlchemyBase, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
-    def generate_reset_password_token(self, config):
+    def generate_token(self, config):
         serializer = URLSafeTimedSerializer(config["SECRET_KEY"])
-
         return serializer.dumps(self.email, salt=self.hashed_password)
 
     @staticmethod
-    def validate_reset_password_token(token: str, user_id: int, db_sess, config):
+    def validate_token(token: str, user_id: int, db_sess, config):
         user = db_sess.query(User).get(user_id)
 
         if user is None:

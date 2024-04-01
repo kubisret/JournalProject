@@ -116,7 +116,7 @@ def reset_password(token, user_id):
     if current_user.is_authenticated:
         return redirect("/index")
     db_sess = db_session.create_session()
-    user = User.validate_reset_password_token(token, user_id, db_sess, config)
+    user = User.validate_token(token, user_id, db_sess, config)
     if not user:
         return render_template(
             "reset_password_error.html", title="Reset Password error"
@@ -154,14 +154,14 @@ def confirm_email_request():
 @blueprint.route("/confirm_email/<token>/<int:user_id>", methods=["GET", "POST"])
 def confirm_email(token, user_id):
     db_sess = db_session.create_session()
-    user = User.validate_reset_password_token(token, user_id, db_sess, config)
+    user = User.validate_token(token, user_id, db_sess, config)
     if not user:
         return render_template(
             "reset_password_error.html", title="Reset Password error"
         )
 
     user_ = db_sess.query(User).filter(User.id == user_id).first()
-    user_.is_confirm = 1
+    user_.is_confirm = True
     db_sess.commit()
 
     return render_template("confirm_email_success.html", title="Reset Password error")

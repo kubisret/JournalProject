@@ -1,13 +1,12 @@
 from flask import render_template_string, url_for
 from flask_mailman import EmailMessage
-
 from static.message.confirm_email_html_content import confirm_email_html_content
 
 
 def send_confirm_email(user, config):
     confirm_url = url_for(
         "users_function.confirm_email",
-        token=user.generate_reset_password_token(config),
+        token=user.generate_token(config),
         user_id=user.id,
         _external=True,
     )
