@@ -57,6 +57,16 @@ def reqister():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Пароли не совпадают")
+
+        if (len(form.password.data) < 8 or len(form.password.data) > 128 or
+                len(set(str(form.password.data)) & set('ЙЦУКЕНГШЩЗХЪЁФЫВАПРОЛДЖЭЯЧСМИТЬБЮ '
+                                                       'йцукенгшщзхъёфывапролджэячсмитьбю'
+                                                       '/@?#<>%&|')) != 0 or
+                len(set(str(form.password.data)) & set('1234567890')) == 0):
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Некорректный пароль")
+
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',

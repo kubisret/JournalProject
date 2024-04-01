@@ -55,27 +55,13 @@
                 </div>
             {% endfor %}
     </div>
-     <br>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-      <label class="form-check-label" for="flexRadioDefault1">
-        Преподователь
-      </label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-      <label class="form-check-label" for="flexRadioDefault2">
-        Ученик
-      </label>
-    </div>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-      <label class="form-check-label" for="flexRadioDefault2">
-        Родитель
-      </label>
-    </div>
-    <br>
+      <br>
+      <select class="form-select" aria-label="Выберите свою должность">
+          <option selected value="1">Ученик (студент)</option>
+          <option value="2">Учитель (преподователь)</option>
+          <option value="3">Ролитель (законный представитель)</option>
+      </select>
+      <br>
     {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
     <div>{{ message }}</div>
     <br>

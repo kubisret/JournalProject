@@ -1,10 +1,8 @@
 import json
 import os
-
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mailman import Mail
-
 from blueprints import users_blueprint
 from data import db_session
 from data.users import User
@@ -13,8 +11,8 @@ app = Flask(__name__)
 
 with open('config.json', 'r', encoding='utf-8') as config_file:
     config = json.load(config_file)
-for key, val in config.items():
-    app.config[key] = val
+    for key, val in config.items():
+        app.config[key] = val
 
 mail = Mail(app)
 login_manager = LoginManager()
@@ -37,7 +35,11 @@ def load_user(user_id):
 
 @app.route('/')
 @app.route('/index')
-def index():
+def index() -> str:
+    """
+        Method for rendering the main page
+        :return: str
+    """
     return render_template('index.html', title='Электронный журнал')
 
 
