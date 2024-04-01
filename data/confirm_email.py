@@ -1,18 +1,19 @@
 from flask import render_template_string, url_for
 from flask_mailman import EmailMessage
-from static.message.reset_password_email_html_content import reset_password_email_html_content
+
+from static.message.confirm_email_html_content import confirm_email_html_content
 
 
-def send_reset_password_email(user, config):
-    reset_password_url = url_for(
-        "users_function.reset_password",
+def send_confirm_email(user, config):
+    confirm_url = url_for(
+        "users_function.confirm_email",
         token=user.generate_reset_password_token(config),
         user_id=user.id,
         _external=True,
     )
 
     email_body = render_template_string(
-        reset_password_email_html_content, reset_password_url=reset_password_url
+        confirm_email_html_content, confirm_url=confirm_url
     )
 
     message = EmailMessage(

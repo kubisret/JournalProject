@@ -1,14 +1,17 @@
 import json
 
 import flask
+from flask_login import login_required, logout_user, current_user, login_user
 from flask import redirect, render_template, flash
-from flask_login import login_manager, login_required, logout_user, current_user, login_user
 
-from data import db_session
 from data.reset_password_email import send_reset_password_email
+from data.confirm_email import send_confirm_email
 from data.users import User
-from forms.login_form import LoginForm
+from data import db_session
+
 from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
+from forms.confirm_email import ConfirmEmailForm
+from forms.login_form import LoginForm
 from forms.user import RegisterForm
 
 blueprint = flask.Blueprint(
@@ -131,3 +134,34 @@ def reset_password(token, user_id):
     return render_template(
         "reset_password.html", title="Reset Password", form=form
     )
+
+
+@blueprint.route('/confirm_email', methods=['GET', 'POST'])
+def confirm_email_request():
+    if current_user.is_confirm:
+        return redirect("/index")
+
+    form = ConfirmEmailForm()
+    if form.validate_on_submit():
+        user = current_user
+        send_confirm_email(user, config)
+
+        render_template('confirm_email.html', form=form)
+
+    return render_template('confirm_email.html', form=form)
+
+
+@blueprint.route("/confirm_email/<token>/<int:user_id>", methods=["GET", "POST"])
+def confirm_email(token, user_id):
+    db_sess = db_session.create_session()
+    user = User.validate_reset_password_token(token, user_id, db_sess, config)
+    if not user:
+        return render_template(
+            "reset_password_error.html", title="Reset Password error"
+        )
+
+    user_ = db_sess.query(User).filter(User.id == user_id).first()
+    user_.is_confirm = 1
+    db_sess.commit()
+
+    return render_template("confirm_email_success.html", title="Reset Password error")
