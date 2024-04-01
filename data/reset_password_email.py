@@ -16,7 +16,7 @@ def send_reset_password_email(user, config):
     )
 
     message = EmailMessage(
-        subject="Reset your password",
+        subject="ПОдтверждение почты",
         body=email_body,
         to=[user.email]
     )

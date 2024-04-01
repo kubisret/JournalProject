@@ -13,6 +13,7 @@ from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.confirm_email import ConfirmEmailForm
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
+from logics.logics import check_validate_password
 
 blueprint = flask.Blueprint(
     'users_function',
@@ -44,7 +45,7 @@ def login():
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
         return render_template('login.html',
-                               message="Неправильная почта или пароль",
+                               message="Неправильная почта или пароль.",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
@@ -59,27 +60,25 @@ def reqister():
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Пароли не совпадают")
+                                   message="Пароли не совпадают.")
 
-        if (len(form.password.data) < 8 or len(form.password.data) > 128 or
-                len(set(str(form.password.data)) & set('ЙЦУКЕНГШЩЗХЪЁФЫВАПРОЛДЖЭЯЧСМИТЬБЮ '
-                                                       'йцукенгшщзхъёфывапролджэячсмитьбю'
-                                                       '/@?#<>%&|')) != 0 or
-                len(set(str(form.password.data)) & set('1234567890')) == 0):
+        response, message = check_validate_password(form.password.data)
+        if not response:
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Некорректный пароль")
+                                   message=message)
 
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Такой пользователь уже есть")
+                                   message="Такой пользователь уже есть.")
         user = User(
             name=form.name.data,
             surname=form.surname.data,
             email=form.email.data,
         )
+
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
@@ -100,11 +99,6 @@ def reset_password_request():
             return redirect('/register')
         else:
             send_reset_password_email(user, config)
-
-            flash(
-                "Instructions to reset your password were sent to your email address,"
-                " if it exists in our system."
-            )
 
             render_template('reset_password_request.html', form=form)
 

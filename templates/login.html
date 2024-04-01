@@ -40,8 +40,11 @@
             {% endfor %}
     </div>
         {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
-    <div>{{ message }}</div>
-    <br>
+      <br>
+      <br>
+    <div>
+        <p class="fst-italic">{{ message }}</p>
+    </div>
     <p><a class="link-opacity-100" href="/register">Не зарегистрированы в системе?</a></p>
     <p><a class="link-opacity-100" href="/reset_password">Забыли пароль?</a></p>
   </form>
