@@ -118,6 +118,17 @@ def reset_password(token, user_id):
 
     form = ResetPasswordForm()
     if form.validate_on_submit():
+        if form.password.data != form.password_again.data:
+            return render_template('reset_password.html', title='Регистрация',
+                                   form=form,
+                                   message="Пароли не совпадают.")
+
+        response, message = check_validate_password(form.password.data)
+        if not response:
+            return render_template('reset_password.html', title='Регистрация',
+                                   form=form,
+                                   message=message)
+
         user.set_password(form.password.data)
         db_sess.commit()
 

@@ -4,7 +4,7 @@ import re
 def check_validate_password(password):
     # Проверяем длину пароля
     if len(password) < 8 or len(password) > 128:
-        return False, 'Некорректная длина пароля.'
+        return False, 'Слишком маленькая длина пароля.'
 
     # Проверяем наличие строчной буквы
     if not re.search("[a-z]", password):
