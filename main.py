@@ -7,6 +7,7 @@ from blueprints import users_blueprint
 from data import db_session
 from data.users import User
 
+
 app = Flask(__name__)
 
 with open('config.json', 'r', encoding='utf-8') as config_file:
@@ -40,7 +41,7 @@ def index() -> str:
         Method for rendering the main page
         :return: str
     """
-    return render_template('index.html', title='Электронный журнал')
+    return render_template('/basic/index.html', title='Электронный журнал')
 
 
 if __name__ == '__main__':
