@@ -59,10 +59,71 @@
     {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
     <br>
     <br>
+    <div class="progress" role="progressbar" aria-label="Пример успеха" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-success" id="progressBar" style="width: 0%"></div>
+    </div>
+    <br>
     <div>
         <p class="fst-italic">{{ message }}</p>
     </div>
     <p><a class="link-opacity-100" href="/login">Уже зарегистрированы?</a></p>
   </form>
 </main>
+
+<script>
+    $(document).ready(function () {
+    $("#label-password-register").keyup(function () {
+        var password = $("#label-password-register").val();
+
+        let strength = check(password);
+        let color = getColor(strength);
+
+        document.getElementById('progressBar').style.width = strength + '%';
+        document.getElementById('progressBar').classList = "progress-bar " + color;
+
+    });
+
+    function check(password) {
+        let strength = 0;
+
+        // Проверяем длину пароля
+        if (password.length < 8) {
+            return 0;
+        }
+
+        // Проверяем наличие цифр
+        if (/\d/.test(password)) {
+            strength += 25;
+        }
+
+        // Проверяем наличие букв верхнего регистра
+        if (/[A-Z]/.test(password)) {
+            strength += 25;
+        }
+
+        // Проверяем наличие букв нижнего регистра
+        if (/[a-z]/.test(password)) {
+            strength += 25;
+        }
+
+        // Проверяем наличие специальных символов
+        if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            strength += 25;
+        }
+
+        return strength;
+    }
+
+    function getColor(strength) {
+            if (strength >= 75) {
+                return "bg-success";
+            } else if (strength >= 50) {
+                return "bg-warning";
+            } else {
+                return "bg-danger";
+            }
+        }
+
+});
+</script>
 {% endblock %}
