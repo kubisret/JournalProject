@@ -59,8 +59,8 @@
     {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
     <br>
     <br>
-    <div class="progress" role="progressbar" aria-label="Пример успеха" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar bg-success" id="progressBar" style="width: 0%"></div>
+    <div class="progress" role="progressbar" aria-label="Пример успеха" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar progress-bar-striped" id="progressBar" style="width: 0%"></div>
     </div>
     <br>
     <div>
@@ -79,7 +79,7 @@
         let color = getColor(strength);
 
         document.getElementById('progressBar').style.width = strength + '%';
-        document.getElementById('progressBar').classList = "progress-bar " + color;
+        document.getElementById('progressBar').classList = "progress-bar progress-bar-striped " + color;
 
     });
 

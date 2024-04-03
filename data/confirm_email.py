@@ -16,7 +16,7 @@ def send_confirm_email(user, config):
     )
 
     message = EmailMessage(
-        subject="Сброс пароля",
+        subject="Подтверждение почты",
         body=email_body,
         to=[user.email]
     )
