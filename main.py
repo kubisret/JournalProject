@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from flask_mailman import Mail
 from blueprints import users_blueprint
 from data import db_session
-from data.users import User
+from data.models.users import User
 
 app = Flask(__name__)
 
