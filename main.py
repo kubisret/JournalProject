@@ -44,5 +44,10 @@ def index() -> str:
     return render_template('/basic/index.html', title='Электронный журнал')
 
 
+@app.route('/profile')
+def profile():
+    return render_template('/basic/profile.html', title='Электронный журнал')
+
+
 if __name__ == '__main__':
     main()
