@@ -2,9 +2,11 @@ import json
 import flask
 from flask_login import login_required, logout_user, current_user, login_user
 from flask import redirect, render_template
+from flask import redirect, render_template
+
 from data.reset_password_email import send_reset_password_email
 from data.confirm_email import send_confirm_email
-from data.users import User
+from data.models.users import User
 from data import db_session
 from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.confirm_email import ConfirmEmailForm
