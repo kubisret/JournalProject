@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mailman import Mail
-from blueprints import users_blueprint
+from blueprints import users_blueprint, classes_blueprint
 from data import db_session
 from data.models.users import User
 
@@ -25,6 +25,7 @@ def main():
         os.makedirs('db')
     db_session.global_init("db/journal.db")
     app.register_blueprint(users_blueprint.blueprint)
+    app.register_blueprint(classes_blueprint.blueprint)
     app.run()
 
 

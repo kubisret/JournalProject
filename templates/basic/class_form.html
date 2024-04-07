@@ -1,0 +1,39 @@
+{% extends "/basic/base.html" %}
+
+{% block content %}
+<main class="form-signin w-100 m-auto">
+  <form action="" method="post">
+  {{ form.hidden_tag() }}
+    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
+      <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
+      <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
+    </svg>
+    <br><br>
+    <h1 class="h3 mb-3 fw-normal">Создание учебного класса</h1>
+    <div class="form-floating">
+        {{ form.title(class="form-control", id="label-name-register", type="text", placeholder="name@example.com") }}
+        <label for="label-name-register">Название учебного класса</label>
+        {% for error in form.title.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+    </div>
+    <div class="form-floating">
+        {{ form.about(class="form-control", id="label-surname-register", type="text", placeholder="Password") }}
+        <label for="label-surname-register">Описание</label>
+        {% for error in form.about.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+    </div>
+      <br>
+    {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
+    <br>
+    <div>
+        <p class="fst-italic">{{ message }}</p>
+    </div>
+  </form>
+</main>
+{% endblock %}
