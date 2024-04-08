@@ -69,6 +69,7 @@ def reqister():
                                    form=form,
                                    message="Пароли не совпадают.")
 
+        # Проверка пароля на валидность и безопасность
         response, message = check_validate_password(form.password.data)
         if not response:
             return render_template('/basic/register.html',
