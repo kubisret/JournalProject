@@ -14,14 +14,9 @@ class Classes(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    identifier = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    identifier = sqlalchemy.Column(sqlalchemy.String, unique=True)
     secret_key = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     id_owner = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    is_privat = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     owner = orm.relationship('User')
-
-    def set_secret_key(self, code):
-        self.secret_key = generate_password_hash(code)
-
-    def check_secret_key(self, code):
-        return check_password_hash(self.secret_key, code)
