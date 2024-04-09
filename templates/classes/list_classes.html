@@ -86,18 +86,23 @@
     </div>
 
 
-      <div>
-        <main class="d-flex">
-          <h1>Это названия всех классов, которые создал ты. Позже будут карточки))</h1>
-          {% for class_ in classes %}
-            <ul>
+      <div class="container">
+        <div class="row row-cols-3">
+            {% for class_ in classes %}
               {% if class_.id_owner == current_user.id %}
-                <li>{{ class_.title }}</li>
+                <div class="col" onclick="window.location.href='#'">
+
+                  <div class="class-div-class-room">
+                    <h3 class="h3-overflow-card">{{ class_.title }}</h3>
+                    <h6 class="h6-overflow-card">{{ class_.about }}</h6>
+                  </div>
+
+                </div>
               {% endif %}
-            </ul>
           {% endfor %}
-        </main>
-         </div>
+        </div>
+      </div>
+
   </main>
 </div>
 

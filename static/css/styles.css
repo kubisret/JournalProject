@@ -134,3 +134,42 @@ main {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
 }
+
+
+
+
+
+.class-div-class-room {
+        background-color: rgba(248, 249, 250, 1);
+        border-radius: 10px;
+        padding: 20px;
+        padding-bottom: 100px;
+        margin-bottom: 10px;
+        width: 270px;
+        height: 150px;
+        cursor: pointer;
+
+        white-space: nowrap; /* предотвращает перенос текста на новую строку */
+        overflow: hidden; /* скрытие текста, который выходит за пределы блока */
+        text-overflow: ellipsis; /* добавление многоточия в конце текста */
+        border: 1px solid LightGrey;
+    }
+
+.h3-overflow-card {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+
+}
+
+.h6-overflow-card {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+
+}
+
+.h3-overflow-card:hover, h6-overflow-card:hover {
+  white-space: normal;
+}
+
