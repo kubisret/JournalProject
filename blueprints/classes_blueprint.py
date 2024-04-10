@@ -1,4 +1,6 @@
 import json
+from os import abort
+
 import flask
 from flask import redirect, render_template, make_response
 from flask_login import current_user, login_required
@@ -45,6 +47,8 @@ def class_create():
         return redirect('/')
     form = ClassForm()
     if form.validate_on_submit():
+        if form.title.data == '':
+            return redirect('/class_create', message='Поле названия не должно быть пустым')
         db_sess = db_session.create_session()
         classes = Classes()
         classes.title = form.title.data
@@ -75,19 +79,19 @@ def class_create():
         db_sess = db_session.create_session()
         classes = db_sess.query(Classes).filter(Classes.identifier == form_join.identifier.data).first()
         if classes:
-            if classes.is_privat:
-                return make_response(404)
-            if db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
-                                                         RelationUserToClass.id_user == current_user.id).first():
-                return make_response(404)
-            if classes.secret_key == form.secret_key:
+            # if classes.is_privat:
+            #     return make_response(404)
+            # if db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
+            #                                              RelationUserToClass.id_user == current_user.id).first():
+            #     return make_response(404)
+            if classes.secret_key == form_join.secret_key:
                 relation = RelationUserToClass()
                 relation.id_class = classes.id
                 relation.id_user = current_user.id
                 db_sess.add(relation)
                 db_sess.commit()
                 return redirect('/class_create')
-        return make_response(404)
+        # return make_response(404)
     return render_template('classes/class_form.html', form=form, form_join=form_join, title='Создание класса')
 
 
