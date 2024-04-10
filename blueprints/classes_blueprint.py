@@ -30,7 +30,7 @@ def list_classes():
         return redirect('/')
 
     db_sess = db_session.create_session()
-    all_classes = db_sess.query(Classes).all()
+    all_classes = db_sess.query(Classes).all()[::-1]
 
     return render_template('classes/list_classes.html',
                            title='Список классов',
