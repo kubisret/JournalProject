@@ -69,7 +69,26 @@ def class_create():
         db_sess.add(classes)
         db_sess.commit()
         return redirect('/list_classes')
-    return render_template('classes/class_form.html', form=form, title='Создание класса')
+
+    form_join = ClassJoinForm()
+    if form_join.validate_on_submit():
+        db_sess = db_session.create_session()
+        classes = db_sess.query(Classes).filter(Classes.identifier == form_join.identifier.data).first()
+        if classes:
+            if classes.is_privat:
+                return make_response(404)
+            if db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
+                                                         RelationUserToClass.id_user == current_user.id).first():
+                return make_response(404)
+            if classes.secret_key == form.secret_key:
+                relation = RelationUserToClass()
+                relation.id_class = classes.id
+                relation.id_user = current_user.id
+                db_sess.add(relation)
+                db_sess.commit()
+                return redirect('/class_create')
+        return make_response(404)
+    return render_template('classes/class_form.html', form=form, form_join=form_join, title='Создание класса')
 
 
 @blueprint.route('/class_edit/<int:id_class>', methods=['POST', 'GET'])
@@ -108,27 +127,3 @@ def class_delete(id_class):
     db_sess.delete(classes)
     db_sess.commit()
     return redirect('/')
-
-
-@blueprint.route('/class_join', methods=['GET', 'POST'])
-@login_required
-def class_join():
-    form = ClassJoinForm()
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        classes = db_sess.query(Classes).filter(Classes.identifier == form.identifier.data).first()
-        if classes:
-            if classes.is_privat:
-                return make_response(404)
-            if db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
-                                                         RelationUserToClass.id_user == current_user.id).first():
-                return make_response(404)
-            if classes.secret_key == form.secret_key:
-                relation = RelationUserToClass()
-                relation.id_class = classes.id
-                relation.id_user = current_user.id
-                db_sess.add(relation)
-                db_sess.commit()
-                return redirect('/class_create')
-        return make_response(404)
-    return redirect('/class_create')
