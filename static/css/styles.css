@@ -135,6 +135,17 @@ main {
     border-top-left-radius: 0;
 }
 
+#label-identifier-class-join {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#label-key-class-join {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
 
 
 
@@ -169,7 +180,11 @@ main {
 
 }
 
-.h3-overflow-card:hover, h6-overflow-card:hover {
-  white-space: normal;
+.h3-overflow-card:hover {
+    white-space: normal;
+}
+
+.h6-overflow-card:hover {
+    white-space: normal;
 }
 
