@@ -64,7 +64,6 @@
   <div class="container">
         <div class="row row-cols-3">
             {% for class_ in classes %}
-              {% if class_.id_owner == current_user.id %}
                 <div class="col" onclick="window.location.href='#'">
 
                   <div class="class-div-class-room">
@@ -73,7 +72,6 @@
                   </div>
 
                 </div>
-              {% endif %}
           {% endfor %}
         </div>
       </div>

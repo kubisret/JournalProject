@@ -31,8 +31,11 @@ def list_classes():
         return redirect('/')
 
     db_sess = db_session.create_session()
-    all_classes = db_sess.query(Classes).all()[::-1]
-
+    all_classes_created = db_sess.query(Classes).filter(Classes.id_owner == current_user.id).all()[::-1]
+    all_classes_join = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
+    all_classes_join = [db_sess.query(Classes).filter(Classes.id == i.id_class).first() for i in all_classes_join]
+    all_classes = all_classes_created[::]
+    all_classes.extend(all_classes_join)
     return render_template('classes/list_classes.html',
                            title='Список классов',
                            classes=all_classes)
