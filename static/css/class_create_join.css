@@ -1,0 +1,37 @@
+#label-title-class-create {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#label-about-class-create {
+    margin-bottom: -1px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#label-identifier-class-create {
+    margin-bottom: -1px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#label-key-class-create {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+#label-identifier-class-join {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#label-key-class-join {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}

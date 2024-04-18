@@ -1,9 +1,13 @@
 {% extends "/base_templates/base_profile.html" %}
 
+{% block link_css %}
+    <link rel="stylesheet" href="/static/css/class_room.css">
+{% endblock %}
+
 {% block content_profile %}
 <main class="d-flex flex-nowrap">
     <h1 class="visually-hidden">Sidebars examples</h1>
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px; height: 600px">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <span class="fs-4">Меню</span>
         </a>
