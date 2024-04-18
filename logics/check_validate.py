@@ -29,3 +29,9 @@ def check_validate_password(password):
     ###################################################################################
 
     return True, 'Надежный пароль'
+
+
+def check_validate_identifier(list_identifier):
+    response = all([False if not symbol.isdigit() else True for symbol in list_identifier])
+    return response
+

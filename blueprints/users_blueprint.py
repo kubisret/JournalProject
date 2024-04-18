@@ -12,7 +12,7 @@ from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.confirm_email import ConfirmEmailForm
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
-from logics.check_validate_password import check_validate_password
+from logics.check_validate import check_validate_password
 
 
 blueprint = flask.Blueprint(

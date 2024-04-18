@@ -10,7 +10,7 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="/list_classes" class="nav-link active" aria-current="page">
+                <a href="/list_classes" class="nav-link link-body-emphasis" aria-current="page">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-house-door" viewBox="0 0 16 16">
                         <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"/>
@@ -19,7 +19,7 @@
                 </a>
             </li>
             <li>
-                <a href="/class_create" class="nav-link link-body-emphasis">
+                <a href="/class_create" class="nav-link active">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-building" viewBox="0 0 16 16">
                         <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
@@ -71,45 +71,53 @@
         </div>
     </div>
 
-    <div class="container">
-        {% if classes_create %}
-            <h3>Создали:</h3>
-        {% else %}
-            <h3>Создали:</h3>
-            <p>Вы еще не создали свои классы...</p>
-        {% endif %}
-        <div class="row row-cols-3">
-            {% for _ in classes_create %}
-            <div class="col" onclick="window.location.href='#'">
+    <div class="container" style="width: 50%; float: left; margin: 0;">
+        <main class="d-flex">
+            <div style="width: 100%">
+                <form action="" method="post">
+                    {{ form_join.hidden_tag() }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor"
+                         class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
+                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
+                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
+                    </svg>
+                    <br><br>
+                    <h3>Присоединение в новый класс</h3>
+                    <div class="form-floating">
+                        {{ form_join.identifier(class="form-control", id="label-identifier-class-join",
+                        type="text", placeholder="Password") }}
+                        <label for="label-key-class-create">Идентификатор</label>
+                        {% for error in form_join.secret_key.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                    </div>
 
-                <div class="class-div-class-room">
-                    <h3 class="h3-overflow-card">{{ _.title }}</h3>
-                    <h6 class="h6-overflow-card">{{ _.about }}</h6>
-                </div>
-
+                    <div class="form-floating">
+                        {{ form_join.secret_key(class="form-control", id="label-key-class-join",
+                        type="text", placeholder="Password") }}
+                        <label for="label-key-class-create">Ключ доступа</label>
+                        {% for error in form_join.secret_key.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        {{ form_join.submit(class="btn btn-primary w-100 py-2", type="submit") }}
+                    </div>
+                    <br>
+                    <a class="btn btn-light w-100 py-2" href="/class_create" role="button">Создать новый класс</a>
+                    <br>
+                    <br>
+                    <div>
+                        <p class="fst-italic">{{ message }}</p>
+                    </div>
+                </form>
             </div>
-            {% endfor %}
-        </div>
-        <br>
-        {% if classes_join %}
-            <h3>Присоединились:</h3>
-        {% else %}
-            <h3>Присоединились:</h3>
-            <p>Вы еще не вступили в другие классы...</p>
-        {% endif %}
-        <div class="row row-cols-3">
-            {% for _ in classes_join %}
-            <div class="col" onclick="window.location.href='#'">
-
-                <div class="class-div-class-room">
-                    <h3 class="h3-overflow-card">{{ _.title }}</h3>
-                    <h6 class="h6-overflow-card">{{ _.about }}</h6>
-                </div>
-
-            </div>
-            {% endfor %}
-        </div>
-
+        </main>
     </div>
 </main>
 {% endblock %}

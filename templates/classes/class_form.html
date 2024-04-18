@@ -58,16 +58,15 @@
             <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
                data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>mdo</strong>
+                <strong>{{ current_user.name }}</strong>
             </a>
             <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Настройки</a></li>
+                <li><a class="dropdown-item" href="/profile">Профиль</a></li>
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                <li><a class="dropdown-item" href="/logout">Выйти</a></li>
             </ul>
         </div>
     </div>
@@ -127,61 +126,14 @@
                     <br>
                     {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
                     <br>
+                    <br>
+                    <a class="btn btn-light w-100 py-2" href="/class_join" role="button">Войти по приглашению</a>
+                    <br>
+                    <br>
                     <div>
                         <p class="fst-italic">{{ message }}</p>
                     </div>
                 </form>
-
-                <!-- Кнопка-триггер модального окна -->
-                <button type="button" class="btn btn-light w-100 py-2" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
-                    Войти по приглашению
-                </button>
-
-                <!-- Модальное окно -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Войти в класс</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Закрыть"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" method="post">
-                                    {{ form_join.hidden_tag() }}
-                                    <div class="form-floating">
-                                        {{ form_join.identifier(class="form-control", id="label-identifier-class-join",
-                                        type="text", placeholder="Password") }}
-                                        <label for="label-key-class-create">Идентификатор</label>
-                                        {% for error in form.secret_key.errors %}
-                                        <div class="alert alert-danger" role="alert">
-                                            {{ error }}
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-
-                                    <div class="form-floating">
-                                        {{ form_join.secret_key(class="form-control", id="label-key-class-join",
-                                        type="text", placeholder="Password") }}
-                                        <label for="label-key-class-create">Ключ доступа</label>
-                                        {% for error in form.secret_key.errors %}
-                                        <div class="alert alert-danger" role="alert">
-                                            {{ error }}
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        {{ form_join.submit(class="btn btn-primary w-100 py-2", type="submit") }}
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         </main>
     </div>

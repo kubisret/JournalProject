@@ -1,15 +1,13 @@
 import json
-
 import flask
-from flask import redirect, render_template, make_response, abort, jsonify, flash
-from flask_login import current_user, login_required
-
+from flask import redirect, render_template, make_response
+from flask_login import current_user
 from data import db_session
 from data.models.classes import Classes
 from data.models.relation_model import RelationUserToClass
-from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
+from logics.check_validate import check_validate_identifier
 from logics.data_class_room import create_default_identifier, create_default_key
 
 blueprint = flask.Blueprint(
@@ -48,25 +46,31 @@ def class_create():
         return redirect('/login')
     if not current_user.is_confirm:
         return redirect('/')
+
     form = ClassForm()
     if form.validate_on_submit():
         if form.title.data == '':
-            return redirect('/class_create', message='Поле названия не должно быть пустым')
+            return redirect('/class_create')
+
         db_sess = db_session.create_session()
         classes = Classes()
         classes.title = form.title.data
         classes.about = form.about.data
         classes.id_owner = current_user.id
 
-        # НУЖНО СДЕЛАТЬ ПРОВЕРКУ, ЧТО ИСПОЛЬЗУЮТСЯ ТОЛЬКО ЦИФРЫ!!!!
         if form.identifier.data == '':
-            while True:
-                identifier = create_default_identifier()
-                if not db_sess.query(Classes).filter(Classes.identifier == identifier).all():
-                    break
-            classes.identifier = identifier
+            list_identifier = db_sess.query(Classes).filter(Classes.identifier).all()
+            classes.identifier = create_default_identifier()
+            while classes.identifier in list_identifier:
+                classes.identifier = create_default_identifier()
         else:
             classes.identifier = form.identifier.data
+            validity = check_validate_identifier(classes.identifier)
+            if not validity:
+                return render_template('classes/class_form.html',
+                                       title='Создание класса',
+                                       message='Идентификатор должен содержать только цифры',
+                                       form=form)
 
         if form.secret_key.data == '':
             classes.secret_key = create_default_key()
@@ -77,30 +81,64 @@ def class_create():
         db_sess.commit()
         return redirect('/list_classes')
 
+    return render_template('classes/class_form.html',
+                           title='Создание класса',
+                           form=form)
+
+
+@blueprint.route('/class_join', methods=['POST', 'GET'])
+def class_join():
+    if not current_user.is_authenticated:
+        return redirect('/login')
+    if not current_user.is_confirm:
+        return redirect('/')
+
     form_join = ClassJoinForm()
     if form_join.validate_on_submit():
         db_sess = db_session.create_session()
         classes = db_sess.query(Classes).filter(Classes.identifier == form_join.identifier.data).first()
         if classes:
             if classes.id_owner == current_user.id:
-                flash('Вы являетись создателем данного класса')
-            elif classes.is_privat:
-                flash('Класс закрыт для присоединения')
+                return render_template('classes/class_join.html',
+                                       form_join=form_join,
+                                       message='Вы являетесь создателем класса',
+                                       title='Вход в класс')
+
             elif db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
-                                                         RelationUserToClass.id_user == current_user.id).first():
-                flash('Вы уже состоите в этом классе')
+                                                           RelationUserToClass.id_user == current_user.id).first():
+                return render_template('classes/class_join.html',
+                                       form_join=form_join,
+                                       message='Вы уже состоите в этом классе',
+                                       title='Вход в класс')
+
+            elif classes.is_privat:
+                return render_template('classes/class_join.html',
+                                       form_join=form_join,
+                                       message='Класс закрыт для присоединения',
+                                       title='Вход в класс')
+
             elif classes.secret_key == form_join.secret_key.data:
                 relation = RelationUserToClass()
                 relation.id_class = classes.id
                 relation.id_user = current_user.id
                 db_sess.add(relation)
                 db_sess.commit()
-                return redirect('/class_create')
+                return redirect('/list_classes')
+
             else:
-                flash('Неверный идентификатор или ключ доступа')
+                return render_template('classes/class_join.html',
+                                       form_join=form_join,
+                                       message='Неверный ключ доступа',
+                                       title='Вход в класс')
         else:
-            flash('Неверный идентификатор или ключ доступа')
-    return render_template('classes/class_form.html', form=form, form_join=form_join, title='Создание класса')
+            return render_template('classes/class_join.html',
+                                   form_join=form_join,
+                                   message='Неверный идентификатор',
+                                   title='Вход в класс')
+
+    return render_template('classes/class_join.html',
+                           form_join=form_join,
+                           title='Вход в класс')
 
 
 @blueprint.route('/class_edit/<int:id_class>', methods=['POST', 'GET'])

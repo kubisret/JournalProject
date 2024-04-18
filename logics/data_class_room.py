@@ -1,10 +1,8 @@
 
 def create_default_identifier():
-    set_symbol = set('01234567890')
-    result_identifier = [''.join(list(set_symbol)[:4]),
-                         ''.join(list(set_symbol)[:4]),
-                         ''.join(list(set_symbol)[:4])]
-    return ''.join(result_identifier)
+    set_symbol = set('0123456789')
+    result_identifier = ''.join(list(set_symbol))
+    return result_identifier
 
 
 def create_default_key():
