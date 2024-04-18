@@ -11,7 +11,6 @@
         white-space: nowrap; /* предотвращает перенос текста на новую строку */
         overflow: hidden; /* скрытие текста, который выходит за пределы блока */
         text-overflow: ellipsis; /* добавление многоточия в конце текста */
-        border: 1px solid LightGrey;
     }
 
 .h3-overflow-card {

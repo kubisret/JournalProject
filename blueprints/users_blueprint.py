@@ -62,7 +62,7 @@ def reqister():
         return redirect("/index")
 
     form = RegisterForm()
-    if form.validate_on_submit():
+    if form.validate_on_sub1mit():
         if form.password.data != form.password_again.data:
             return render_template('/basic/register.html',
                                    title='Регистрация',

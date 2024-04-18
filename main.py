@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mailman import Mail
-from blueprints import users_blueprint, classes_blueprint
+from blueprints import users_blueprint, classes_blueprint, profile_blueprint
 from data import db_session
 from data.models.users import User
 
@@ -26,6 +26,7 @@ def main():
     db_session.global_init("db/journal.db")
     app.register_blueprint(users_blueprint.blueprint)
     app.register_blueprint(classes_blueprint.blueprint)
+    app.register_blueprint(profile_blueprint.blueprint)
     app.run()
 
 
@@ -47,7 +48,8 @@ def index() -> str:
 
 @app.route('/profile')
 def profile():
-    return render_template('/basic/profile.html', title='Электронный журнал')
+    return render_template('/profile/profile.html',
+                           title='Профиль')
 
 
 if __name__ == '__main__':
