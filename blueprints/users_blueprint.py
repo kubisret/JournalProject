@@ -1,7 +1,8 @@
 import json
 import flask
+import requests
 from flask_login import login_required, logout_user, current_user, login_user
-from flask import redirect, render_template
+from flask import redirect, render_template, request
 from flask import redirect, render_template
 
 from data.reset_password_email import send_reset_password_email
@@ -12,8 +13,7 @@ from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.confirm_email import ConfirmEmailForm
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
-from logics.check_validate_password import check_validate_password
-
+from tools.check_validate_password import check_validate_password
 
 blueprint = flask.Blueprint(
     'users_function',
@@ -38,19 +38,15 @@ def login():
         return redirect("/index")
 
     form = LoginForm()
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
-
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            return redirect("/")
-
-        return render_template('/basic/login.html',
-                               title='Авторизация',
-                               form=form,
-                               message="Неправильная почта или пароль.")
-
+    if request.method == 'POST':
+        response = requests.get('http://127.0.0.1:5000/api/user', data=request.form, cookies=request.cookies)
+        if response.status_code == 200:
+            return redirect('/')
+        else:
+            return render_template('/basic/login.html',
+                                   title='Авторизация',
+                                   form=form,
+                                   message=response.json()['message'])
     return render_template('/basic/login.html',
                            title='Авторизация',
                            form=form)
@@ -60,39 +56,16 @@ def login():
 def reqister():
     if current_user.is_authenticated:
         return redirect("/index")
-
     form = RegisterForm()
-    if form.validate_on_submit():
-        if form.password.data != form.password_again.data:
+    if request.method == 'POST':
+        response = requests.post('http://127.0.0.1:5000/api/user', data=request.form, cookies=request.cookies)
+        if response.status_code == 201:
+            return redirect('/login')
+        else:
             return render_template('/basic/register.html',
                                    title='Регистрация',
                                    form=form,
-                                   message="Пароли не совпадают.")
-
-        # Проверка пароля на валидность и безопасность
-        response, message = check_validate_password(form.password.data)
-        if not response:
-            return render_template('/basic/register.html',
-                                   title='Регистрация',
-                                   form=form,
-                                   message=message)
-
-        db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('/basic/register.html',
-                                   title='Регистрация',
-                                   form=form,
-                                   message="Такой пользователь уже есть.")
-        user = User(
-            name=form.name.data,
-            surname=form.surname.data,
-            email=form.email.data,
-        )
-
-        user.set_password(form.password.data)
-        db_sess.add(user)
-        db_sess.commit()
-        return redirect('/login')
+                                   message=response.json()['message'])
     return render_template('/basic/register.html',
                            title='Регистрация',
                            form=form)

@@ -10,7 +10,7 @@ from data.models.relation_model import RelationUserToClass
 from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
-from logics.data_class_room import create_default_identifier, create_default_key
+from tools.data_class_room import create_default_identifier, create_default_key
 
 blueprint = flask.Blueprint(
     'classes_function',
