@@ -1,5 +1,6 @@
 import json
 import flask
+import sqlalchemy
 from flask_login import login_required, logout_user, current_user, login_user
 from flask import redirect, render_template
 from flask import redirect, render_template
@@ -32,10 +33,28 @@ def logout():
     return redirect("/")
 
 
+def create_admin():
+    db_sess = db_session.create_session()
+    admin = User()
+    admin.name = "admin"
+    admin.surname = "admin"
+    admin.email = "admin@mail.ru"
+    admin.set_password('123')
+    admin.is_confirm = 1
+    db_sess.add(admin)
+    db_sess.commit()
+    is_admin = True
+
+
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect("/index")
+
+    try:
+        create_admin()
+    except sqlalchemy.exc.IntegrityError:
+        pass
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -61,8 +80,10 @@ def reqister():
     if current_user.is_authenticated:
         return redirect("/index")
 
+
+    create_admin()
     form = RegisterForm()
-    if form.validate_on_sub1mit():
+    if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template('/basic/register.html',
                                    title='Регистрация',
