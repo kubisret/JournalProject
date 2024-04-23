@@ -7,6 +7,7 @@ from data.models.classes import Classes
 from data.models.relation_model import RelationUserToClass
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
+from forms.status_class_privat import StatusPrivat
 from logics.check_validate import check_validate_identifier
 from logics.data_class_room import create_default_identifier, create_default_key
 
@@ -177,3 +178,29 @@ def class_delete(id_class):
     db_sess.delete(classes)
     db_sess.commit()
     return redirect('/')
+
+
+@blueprint.route('/class/<int:id_class>', methods=['POST', 'GET'])
+def classes(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+
+    form = StatusPrivat()
+    if form.validate_on_submit():
+        if current_class.is_privat:
+            current_class.is_privat = 0
+        else:
+            current_class.is_privat = 1
+        db_sess.commit()
+
+    if current_class.id_owner == current_user.id:
+        return render_template('/classes/class/class.html',
+                               current_class=current_class,
+                               id_class=id_class,
+                               form=form,
+                               title=f'{current_class.title}')
+    else:
+        pass
