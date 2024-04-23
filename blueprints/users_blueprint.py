@@ -38,15 +38,18 @@ def login():
         return redirect("/index")
 
     form = LoginForm()
-    if request.method == 'POST':
-        response = requests.get('http://127.0.0.1:5000/api/user', data=request.form, cookies=request.cookies)
-        if response.status_code == 200:
-            return redirect('/')
-        else:
-            return render_template('/basic/login.html',
-                                   title='Авторизация',
-                                   form=form,
-                                   message=response.json()['message'])
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+
+        return render_template('/basic/login.html',
+                               title='Авторизация',
+                               form=form,
+                               message="Неправильная почта или пароль.")
     return render_template('/basic/login.html',
                            title='Авторизация',
                            form=form)
@@ -58,7 +61,7 @@ def reqister():
         return redirect("/index")
     form = RegisterForm()
     if request.method == 'POST':
-        response = requests.post('http://127.0.0.1:5000/api/user', data=request.form, cookies=request.cookies)
+        response = requests.post(f'http://{config["domen"]}:5000/api/register', data=request.form)
         if response.status_code == 201:
             return redirect('/login')
         else:
