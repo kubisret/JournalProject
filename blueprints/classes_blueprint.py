@@ -8,7 +8,9 @@ from data.models.relation_model import RelationUserToClass
 from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
-from tools.data_class_room import create_default_identifier, create_default_key
+from forms.status_class_privat import StatusPrivat
+from logics.check_validate import check_validate_identifier
+from logics.data_class_room import create_default_identifier, create_default_key
 
 blueprint = flask.Blueprint(
     'classes_function',
@@ -104,7 +106,7 @@ def class_join():
                                        message='Вы являетесь создателем класса',
                                        title='Вход в класс')
 
-            elif db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
+            elif db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id,
                                                            RelationUserToClass.id_user == current_user.id).first():
                 return render_template('classes/class_join.html',
                                        form_join=form_join,
@@ -177,3 +179,48 @@ def class_delete(id_class):
     db_sess.delete(classes)
     db_sess.commit()
     return redirect('/')
+
+
+@blueprint.route('/class/<int:id_class>', methods=['POST', 'GET'])
+def classes(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+    list_id_user, list_user = [], []
+    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == current_class.id).all():
+        list_id_user.append(bunch.id_user)
+    for user in db_sess.query(User).all():
+        if user.id in list_id_user:
+            list_user.append(user)
+
+    form = StatusPrivat()
+    if form.validate_on_submit():
+        if current_class.is_privat:
+            current_class.is_privat = 0
+        else:
+            current_class.is_privat = 1
+        db_sess.commit()
+        return redirect(f'/class/{id_class}')
+
+    if current_class.id_owner == current_user.id:
+        return render_template('/classes/class/class.html',
+                               current_class=current_class,
+                               users=list_user,
+                               id_class=id_class,
+                               form=form,
+                               title=f'{current_class.title}')
+    else:
+        pass
+
+
+@blueprint.route('/delite_user/<id_user>/<id_class>', methods=['POST', 'GET'])
+def delite_user(id_user, id_class):
+    db_sess = db_session.create_session()
+    if current_user.id == db_sess.query(Classes).filter(Classes.id == id_class).first().id_owner:
+        db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == id_user,
+                                                  RelationUserToClass.id_class == id_class).delete()
+        db_sess.commit()
+
+    return redirect(f'/class/{id_class}')

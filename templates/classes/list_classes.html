@@ -1,7 +1,7 @@
 {% extends "/base_templates/base_profile.html" %}
 
 {% block link_css %}
-    <link rel="stylesheet" href="/static/css/class_room.css">
+<link rel="stylesheet" href="/static/css/class_room.css">
 {% endblock %}
 
 {% block content_profile %}
@@ -77,14 +77,14 @@
 
     <div class="container">
         {% if classes_create %}
-            <h3>Создали:</h3>
+        <h3>Создали:</h3>
         {% else %}
-            <h3>Создали:</h3>
-            <p>Вы еще не создали свои классы...</p>
+        <h3>Создали:</h3>
+        <p>Вы еще не создали свои классы...</p>
         {% endif %}
         <div class="row row-cols-3">
             {% for _ in classes_create %}
-            <div class="col" onclick="window.location.href='#'">
+            <div class="col" onclick="window.location.href='/class/{{ _.id }}'">
 
                 <div class="class-div-class-room">
                     <h3 class="h3-overflow-card">{{ _.title }}</h3>
@@ -96,10 +96,10 @@
         </div>
         <br>
         {% if classes_join %}
-            <h3>Присоединились:</h3>
+        <h3>Присоединились:</h3>
         {% else %}
-            <h3>Присоединились:</h3>
-            <p>Вы еще не вступили в другие классы...</p>
+        <h3>Присоединились:</h3>
+        <p>Вы еще не вступили в другие классы...</p>
         {% endif %}
         <div class="row row-cols-3">
             {% for _ in classes_join %}

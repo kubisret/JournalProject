@@ -4,4 +4,4 @@ from wtforms.validators import DataRequired
 
 
 class ConfirmEmailForm(FlaskForm):
-    submit = SubmitField('Отправить код')
+    submit = SubmitField('Отправить письмо')

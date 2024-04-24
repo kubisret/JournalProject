@@ -82,7 +82,6 @@ def reqister():
         return redirect("/index")
 
 
-    create_admin()
     form = RegisterForm()
     if request.method == 'POST':
         response = requests.post(f'http://{config["domen"]}:5000/api/register', data=request.form)
