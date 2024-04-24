@@ -1,8 +1,9 @@
 import json
 import flask
-from flask import redirect, render_template, make_response
+from flask import redirect, render_template, make_response, request
 from flask_login import current_user
 from data import db_session
+from data.models.users import User
 from data.models.classes import Classes
 from data.models.relation_model import RelationUserToClass
 from forms.class_form import ClassForm
@@ -105,7 +106,7 @@ def class_join():
                                        message='Вы являетесь создателем класса',
                                        title='Вход в класс')
 
-            elif db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
+            elif db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id,
                                                            RelationUserToClass.id_user == current_user.id).first():
                 return render_template('classes/class_join.html',
                                        form_join=form_join,
@@ -187,6 +188,12 @@ def classes(id_class):
 
     db_sess = db_session.create_session()
     current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+    list_id_user, list_user = [], []
+    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == current_class.id).all():
+        list_id_user.append(bunch.id_user)
+    for user in db_sess.query(User).all():
+        if user.id in list_id_user:
+            list_user.append(user)
 
     form = StatusPrivat()
     if form.validate_on_submit():
@@ -195,12 +202,23 @@ def classes(id_class):
         else:
             current_class.is_privat = 1
         db_sess.commit()
+        return redirect(f'/class/{id_class}')
 
     if current_class.id_owner == current_user.id:
         return render_template('/classes/class/class.html',
                                current_class=current_class,
+                               users=list_user,
                                id_class=id_class,
                                form=form,
                                title=f'{current_class.title}')
     else:
         pass
+
+
+@blueprint.route('/delite_user/<id_user>/<id_class>', methods=['POST', 'GET'])
+def delite_user(id_user, id_class):
+    db_sess = db_session.create_session()
+    db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == id_user,
+                                              RelationUserToClass.id_class == id_class).delete()
+    db_sess.commit()
+    return redirect(f'/class/{id_class}')

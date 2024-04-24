@@ -77,11 +77,11 @@
 
     <div class="container">
         <div class="div-unit-user" onclick="window.location.href='/'">
-            <h3>Название класса: <i>{{ current_class.title }}</i></h3>
+            <h3><b>{{ current_class.title }}</b></h3>
             {% if current_class.about %}
-            <h6>Описание: <i>{{ current_class.about}}</i></h6>
+            <h6><b>{{ current_class.about}}</b></h6>
             {% else %}
-            <h6>Описание отстутствует</h6>
+            <h6><b>Описание отстутствует</b></h6>
             {% endif %}
         </div>
         <br>
@@ -89,12 +89,63 @@
             <p>Идентификатор — <b>{{ current_class.identifier }}</b> <br> Ключ доступа — <b>{{
                 current_class.secret_key}}</b></p>
         </div>
+        <br>
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">№</font></font></th>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Участник</font></font></th>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Электронный адрес</font></font></th>
+                <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Действия</font></font></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if users %}
+            {% for user in users %}
+            <tr>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ loop.index }}</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ user.surname }} {{ user.name }}</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">{{ user.email }}</font></font></td>
+                <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">
+                        <input data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 0px; padding-left: 8px; padding-right: 8px;" class="btn btn-danger" type="submit" name="button_text" value="удалить">
+                    </font></font></td>
+            </tr>
+            <form action="/delite_user/{{ user.id }}/{{ current_class.id }}" method="post">
+                <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Подтвердите удаление участника</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        После подтверждения действия <b>{{ user.name }} {{ user.surname }}</b> больше не будет состоять в классе.
+                        Вы уверены, что хотите продолжить?
+                      </div>
+                      <div class="modal-footer">
+                        <a  class="btn btn-light" data-bs-dismiss="modal">Закрыть</a>
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Удалить</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </form>
+            {% endfor %}
+           {% else %}
+              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">—</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">—</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">—</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">—</font></font></td>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
 
         <br>
         <div>
             <h5>Характкристики:</h5>
-            <br>
-            <div class="div-unit-status">
+            <div class="div-unit-status" style="display: flex;">
                 <div class="d-flex align-items-center">
                     {% if current_class.is_privat %}
                     <h6>Статус: <u>закрытый</u></h6>
@@ -102,19 +153,18 @@
                     <h6>Статус: <u>открытый</u></h6>
                     {% endif %}
                 </div>
-            </div>
-
-            <form action="" method="post">
-                {{ form.hidden_tag() }}
-                <div style="overflow: hidden;">
-                    <div style="display: inline-block;">{{ form.submit(class="btn btn-link w-100 py-2", type="submit")
-                        }}
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div style="overflow: hidden;">
+                        <div style="display: inline-block;">{{ form.submit(class="btn btn-link w-100 py-2", type="submit", style="padding: 5px; padding-bottom: -8px")
+                            }}
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <i><p class="fst-italic">{{ message }}</p></i>
-                </div>
-            </form>
+                    <div>
+                        <i><p class="fst-italic">{{ message }}</p></i>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </main>
