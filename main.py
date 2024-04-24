@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mailman import Mail
-from blueprints import users_blueprint, classes_blueprint, profile_blueprint
+from blueprints import profile_blueprint
 from flask_restful import Api
 
 from blueprints import users_blueprint, classes_blueprint

@@ -9,8 +9,8 @@ from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
 from forms.status_class_privat import StatusPrivat
-from logics.check_validate import check_validate_identifier
-from logics.data_class_room import create_default_identifier, create_default_key
+from tools.check_validate import check_validate_identifier
+from tools.data_class_room import create_default_identifier, create_default_key
 
 blueprint = flask.Blueprint(
     'classes_function',
