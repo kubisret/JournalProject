@@ -218,7 +218,9 @@ def classes(id_class):
 @blueprint.route('/delite_user/<id_user>/<id_class>', methods=['POST', 'GET'])
 def delite_user(id_user, id_class):
     db_sess = db_session.create_session()
-    db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == id_user,
-                                              RelationUserToClass.id_class == id_class).delete()
-    db_sess.commit()
+    if current_user.id == db_sess.query(Classes).filter(Classes.id == id_class).first().id_owner:
+        db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == id_user,
+                                                  RelationUserToClass.id_class == id_class).delete()
+        db_sess.commit()
+
     return redirect(f'/class/{id_class}')
