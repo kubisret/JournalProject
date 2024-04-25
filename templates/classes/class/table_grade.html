@@ -92,22 +92,25 @@
             <tr>
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ loop.index }}</font></font></td>
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ user.surname }} {{ user.name }}</font></font></td>
-              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">{{ user.email }}</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">{{ *dict_user_grade[user.id] }}</font></font></td>
                 <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">
                         <input data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 0px; padding-left: 8px; padding-right: 8px;" class="btn btn-link" type="submit" name="button_text" value="добавить">
                     </font></font></td>
             </tr>
-            <form action="#" method="post">
+            <form action="/table_grade/{{ current_class.id }}/{{ user.id }}" method="post">
+                {{ form.hidden_tag() }}
                 <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Подтвердите удаление участника</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Добавление новой оценки</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         После подтверждения действия <b>{{ user.name }} {{ user.surname }}</b> больше не будет состоять в классе.
                         Вы уверены, что хотите продолжить?
+                        {{ form.grade.label }}
+                        {{ form.grade() }}
                       </div>
                       <div class="modal-footer">
                         <a  class="btn btn-light" data-bs-dismiss="modal">Закрыть</a>

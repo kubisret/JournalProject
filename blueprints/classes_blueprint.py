@@ -3,11 +3,13 @@ import flask
 from flask import redirect, render_template, make_response
 from flask_login import current_user
 from data import db_session
+from data.models.assessments import Assessments
 from data.models.classes import Classes
 from data.models.relation_model import RelationUserToClass
 from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
+from forms.grade_form import GradeForm
 from forms.status_class_privat import StatusPrivat
 from tools.check_validate import check_validate_identifier
 from tools.data_class_room import create_default_identifier, create_default_key
@@ -219,7 +221,7 @@ def classes(id_class):
         pass
 
 
-@blueprint.route('/table_grade/<int:id_class>')
+@blueprint.route('/table_grade/<int:id_class>', methods=['POST', 'GET'])
 def table_grade(id_class):
     if not current_user.is_authenticated:
         return redirect('/login')
@@ -236,12 +238,38 @@ def table_grade(id_class):
     for user in db_sess.query(User).all():
         if user.id in list_id_user:
             list_user.append(user)
-    list_grade = db_sess.query(Assessment).filter(Assessment.id_class == current_class.id)
+
+    dict_user_grade = {}
+    for bunch in db_sess.query(Assessments).filter(Assessments.id_class == current_class.id).all():
+        if bunch.id_student in dict_user_grade:
+            dict_user_grade[bunch.id_student].append(bunch.value)
+        else:
+            dict_user_grade[bunch.id_student] = [bunch.value]
+
+    form = GradeForm()
 
     return render_template('/classes/class/table_grade.html',
                            id_class=id_class,
-                           users=list_user,
+                           current_class=current_class,
+                           form=form,
+                           users=list_user, dict_user_grade=dict_user_grade,
                            title=f'{current_class.title}')
+
+
+@blueprint.route('/table_grade/<int:id_class>/<int:id_user>', methods=['POST', 'GET'])
+def new_grade(id_class, id_user):
+    db_sess = db_session.create_session()
+    current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+
+    form = GradeForm()
+    if form.validate_on_submit():
+        assessment = Assessments()
+        assessment.id_class = current_class.id
+        assessment.id_student = id_user
+        assessment.value = form.grade.data
+        db_sess.add(assessment)
+        db_sess.commit()
+        return redirect(f'/table_grade/{id_class}')
 
 
 @blueprint.route('/delete_user/<id_user>/<id_class>', methods=['POST', 'GET'])
