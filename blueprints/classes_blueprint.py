@@ -13,6 +13,7 @@ from forms.grade_form import GradeForm
 from forms.status_class_privat import StatusPrivat
 from tools.check_validate import check_validate_identifier
 from tools.data_class_room import create_default_identifier, create_default_key
+from tools.grade_analitycs import GPA
 
 blueprint = flask.Blueprint(
     'classes_function',
@@ -213,8 +214,8 @@ def classes(id_class):
     if current_class.id_owner == current_user.id:
         return render_template('/classes/class/class.html',
                                current_class=current_class,
-                               users=list_user, count_users=len(list_user),
-                               id_class=id_class,
+                               users=list_user,
+                               count_users=len(list_user),
                                form=form,
                                title=f'{current_class.title}')
     else:
@@ -239,20 +240,25 @@ def table_grade(id_class):
         if user.id in list_id_user:
             list_user.append(user)
 
-    dict_user_grade = {}
+    dict_user_grade, dict_user_gpa = {}, {}
     for bunch in db_sess.query(Assessments).filter(Assessments.id_class == current_class.id).all():
         if bunch.id_student in dict_user_grade:
-            dict_user_grade[bunch.id_student].append(bunch.value)
+            dict_user_grade[bunch.id_student] += f'{bunch.value} '
         else:
-            dict_user_grade[bunch.id_student] = [bunch.value]
+            dict_user_grade[bunch.id_student] = f'{bunch.value} '
+            dict_user_gpa[bunch.id_student] = ''
+
+    for key, val in dict_user_grade.items():
+        dict_user_gpa[key] = GPA(list(map(int, dict_user_grade[key].rstrip().split())))
 
     form = GradeForm()
 
     return render_template('/classes/class/table_grade.html',
-                           id_class=id_class,
-                           current_class=current_class,
                            form=form,
-                           users=list_user, dict_user_grade=dict_user_grade,
+                           current_class=current_class,
+                           users=list_user,
+                           dict_user_grade=dict_user_grade,
+                           dict_user_gpa=dict_user_gpa,
                            title=f'{current_class.title}')
 
 
