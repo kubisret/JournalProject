@@ -1,8 +1,9 @@
 import json
 import flask
 import sqlalchemy
+import requests
 from flask_login import login_required, logout_user, current_user, login_user
-from flask import redirect, render_template
+from flask import redirect, render_template, request
 from flask import redirect, render_template
 
 from data.reset_password_email import send_reset_password_email
@@ -13,8 +14,9 @@ from forms.reset_forms import ResetPasswordRequestForm, ResetPasswordForm
 from forms.confirm_email import ConfirmEmailForm
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
-from logics.check_validate import check_validate_password
+from tools.check_validate import check_validate_password
 
+from tools.check_validate_password import check_validate_password
 
 blueprint = flask.Blueprint(
     'users_function',
@@ -69,7 +71,6 @@ def login():
                                title='Авторизация',
                                form=form,
                                message="Неправильная почта или пароль.")
-
     return render_template('/basic/login.html',
                            title='Авторизация',
                            form=form)
@@ -82,37 +83,15 @@ def reqister():
 
 
     form = RegisterForm()
-    if form.validate_on_submit():
-        if form.password.data != form.password_again.data:
+    if request.method == 'POST':
+        response = requests.post(f'http://{config["domen"]}:5000/api/register', data=request.form)
+        if response.status_code == 201:
+            return redirect('/login')
+        else:
             return render_template('/basic/register.html',
                                    title='Регистрация',
                                    form=form,
-                                   message="Пароли не совпадают.")
-
-        # Проверка пароля на валидность и безопасность
-        response, message = check_validate_password(form.password.data)
-        if not response:
-            return render_template('/basic/register.html',
-                                   title='Регистрация',
-                                   form=form,
-                                   message=message)
-
-        db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('/basic/register.html',
-                                   title='Регистрация',
-                                   form=form,
-                                   message="Такой пользователь уже есть.")
-        user = User(
-            name=form.name.data,
-            surname=form.surname.data,
-            email=form.email.data,
-        )
-
-        user.set_password(form.password.data)
-        db_sess.add(user)
-        db_sess.commit()
-        return redirect('/login')
+                                   message=response.json()['message'])
     return render_template('/basic/register.html',
                            title='Регистрация',
                            form=form)

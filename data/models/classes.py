@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from data.db_session import SqlAlchemyBase
 from sqlalchemy import orm
 
-from logics.data_class_room import create_default_identifier, create_default_key
+from tools.data_class_room import create_default_identifier, create_default_key
 
 
 class Classes(SqlAlchemyBase):

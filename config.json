@@ -6,5 +6,6 @@
   "MAIL_DEFAULT_SENDER": "idusernoreply@gmail.com",
   "MAIL_USERNAME": "idusernoreply@gmail.com",
   "MAIL_PASSWORD": "vfbxqikiznuhkncd",
-  "RESET_PASS_TOKEN_MAX_AGE": 7200
+  "RESET_PASS_TOKEN_MAX_AGE": 7200,
+  "domen": "127.0.0.1"
 }

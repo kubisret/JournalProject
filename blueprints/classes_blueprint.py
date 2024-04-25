@@ -1,16 +1,16 @@
 import json
 import flask
-from flask import redirect, render_template, make_response, request
+from flask import redirect, render_template, make_response
 from flask_login import current_user
 from data import db_session
-from data.models.users import User
 from data.models.classes import Classes
 from data.models.relation_model import RelationUserToClass
+from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
 from forms.status_class_privat import StatusPrivat
-from logics.check_validate import check_validate_identifier
-from logics.data_class_room import create_default_identifier, create_default_key
+from tools.check_validate import check_validate_identifier
+from tools.data_class_room import create_default_identifier, create_default_key
 
 blueprint = flask.Blueprint(
     'classes_function',
