@@ -14,7 +14,7 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="/class/{{ id_class }}" class="nav-link active" aria-current="page">
+                <a href="/class/{{ id_class }}" class="nav-link link-body-emphasis" aria-current="page">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-house-door" viewBox="0 0 16 16">
                         <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"/>
@@ -23,7 +23,7 @@
                 </a>
             </li>
             <li>
-                <a href="/table_grade/{{ id_class }}" class="nav-link link-body-emphasis">
+                <a href="/table_grade/{{ id_class }}" class="nav-link active">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-building" viewBox="0 0 16 16">
                         <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
@@ -76,29 +76,13 @@
     </div>
 
     <div class="container">
-        <div class="div-unit-user" onclick="window.location.href='/list_classes'">
-            <h3><b>{{ current_class.title }}</b></h3>
-            {% if current_class.about %}
-            <h6><b>{{ current_class.about}}</b></h6>
-            {% else %}
-            <h6><b>Описание отстутствует</b></h6>
-            {% endif %}
-        </div>
-        <br>
-        <br>
-        <div class="div-shell">
-            <p>Идентификатор — <b>{{ current_class.identifier }}</b> <br> Ключ доступа — <b>{{
-                current_class.secret_key}}</b></p>
-        </div>
-        <br>
-        <br>
         <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
               <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">№</font></font></th>
               <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Участник</font></font></th>
-              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Электронный адрес</font></font></th>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Список оценок</font></font></th>
                 <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Действия</font></font></th>
             </tr>
           </thead>
@@ -110,10 +94,10 @@
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ user.surname }} {{ user.name }}</font></font></td>
               <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">{{ user.email }}</font></font></td>
                 <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">
-                        <input data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 0px; padding-left: 8px; padding-right: 8px;" class="btn btn-link" type="submit" name="button_text" value="удалить">
+                        <input data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 0px; padding-left: 8px; padding-right: 8px;" class="btn btn-link" type="submit" name="button_text" value="добавить">
                     </font></font></td>
             </tr>
-            <form action="/delete_user/{{ user.id }}/{{ current_class.id }}" method="post">
+            <form action="#" method="post">
                 <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -127,7 +111,7 @@
                       </div>
                       <div class="modal-footer">
                         <a  class="btn btn-light" data-bs-dismiss="modal">Закрыть</a>
-                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Удалить</button>
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Добавить</button>
                       </div>
                     </div>
                   </div>
@@ -143,31 +127,6 @@
           </tbody>
         </table>
       </div>
-        <br>
-        <br>
-        <div>
-            <p style="margin: 0px;">Характеристики:</p>
-            <div class="div-unit-status">
-                <div class="d-flex align-items-center" style="display: flex;">
-                    {% if current_class.is_privat %}
-                    <p>Статус: <b>закрытый</b> —</p>
-                    {% else %}
-                    <p>Статус: <b>открытый</b> —</p>
-                    {% endif %}
-                    <form action="" method="post">
-                        {{ form.hidden_tag() }}
-                        <div style="overflow: hidden;">
-                            <div style="display: inline-block;">{{ form.submit(class="btn btn-link w-100 py-2", type="submit", style="padding: 5px; padding-bottom: -8px")
-                                }}
-                            </div>
-                        </div>
-                        <div>
-                            <i><p class="fst-italic">{{ message }}</p></i>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 </main>
 {% endblock %}

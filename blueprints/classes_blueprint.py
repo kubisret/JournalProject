@@ -188,6 +188,10 @@ def classes(id_class):
 
     db_sess = db_session.create_session()
     current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+
+    if current_user.id != current_class.id_owner:
+        return redirect('/list_classes')
+
     list_id_user, list_user = [], []
     for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == current_class.id).all():
         list_id_user.append(bunch.id_user)
@@ -207,7 +211,7 @@ def classes(id_class):
     if current_class.id_owner == current_user.id:
         return render_template('/classes/class/class.html',
                                current_class=current_class,
-                               users=list_user,
+                               users=list_user, count_users=len(list_user),
                                id_class=id_class,
                                form=form,
                                title=f'{current_class.title}')
@@ -215,7 +219,32 @@ def classes(id_class):
         pass
 
 
-@blueprint.route('/delite_user/<id_user>/<id_class>', methods=['POST', 'GET'])
+@blueprint.route('/table_grade/<int:id_class>')
+def table_grade(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+
+    if current_user.id != current_class.id_owner:
+        return redirect('/list_classes')
+
+    list_id_user, list_user = [], []
+    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == current_class.id).all():
+        list_id_user.append(bunch.id_user)
+    for user in db_sess.query(User).all():
+        if user.id in list_id_user:
+            list_user.append(user)
+    list_grade = db_sess.query(Assessment).filter(Assessment.id_class == current_class.id)
+
+    return render_template('/classes/class/table_grade.html',
+                           id_class=id_class,
+                           users=list_user,
+                           title=f'{current_class.title}')
+
+
+@blueprint.route('/delete_user/<id_user>/<id_class>', methods=['POST', 'GET'])
 def delite_user(id_user, id_class):
     db_sess = db_session.create_session()
     if current_user.id == db_sess.query(Classes).filter(Classes.id == id_class).first().id_owner:
