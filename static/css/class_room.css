@@ -11,7 +11,13 @@
         white-space: nowrap; /* предотвращает перенос текста на новую строку */
         overflow: hidden; /* скрытие текста, который выходит за пределы блока */
         text-overflow: ellipsis; /* добавление многоточия в конце текста */
-    }
+}
+
+.class-div-class-room:hover {
+  background-color: rgba(255, 255, 255, 1); /* Цвет дива при наведении */
+  border: 1px solid rgba(14, 111, 253, 1);
+}
+
 
 .h3-overflow-card {
       text-overflow: ellipsis;

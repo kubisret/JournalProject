@@ -5,9 +5,9 @@ from wtforms.fields.choices import SelectField
 
 class GradeForm(FlaskForm):
     grade = SelectField('Оценки', choices=[
-        (2, '2'),
-        (3, '3'),
+        (5, '5'),
         (4, '4'),
-        (5, '5')
+        (3, '3'),
+        (2, '2')
     ])
     submit = SubmitField('Поставить')

@@ -8,8 +8,8 @@
 <main class="d-flex flex-nowrap">
     <h1 class="visually-hidden">Sidebars examples</h1>
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px; min-height: 600px">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <span class="fs-4">Меню</span>
+        <a href="/class/{{ current_class.id }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <span class="fs-4">Класс</span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
@@ -30,30 +30,6 @@
                         <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z"/>
                     </svg>
                     Таблица
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-body-emphasis">
-                    <svg class="bi pe-none me-2" width="16" height="16">
-                        <use xlink:href="#table"></use>
-                    </svg>
-                    Orders
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-body-emphasis">
-                    <svg class="bi pe-none me-2" width="16" height="16">
-                        <use xlink:href="#grid"></use>
-                    </svg>
-                    Products
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-body-emphasis">
-                    <svg class="bi pe-none me-2" width="16" height="16">
-                        <use xlink:href="#people-circle"></use>
-                    </svg>
-                    Customers
                 </a>
             </li>
         </ul>
@@ -81,7 +57,7 @@
           <thead>
             <tr>
               <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">№</font></font></th>
-              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Участник</font></font></th>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ученик</font></font></th>
               <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Список оценок</font></font></th>
               <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Средний балл</font></font></th>
               <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Действия</font></font></th>
@@ -109,14 +85,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        После подтверждения действия <b>{{ user.name }} {{ user.surname }}</b> больше не будет состоять в классе.
-                        Вы уверены, что хотите продолжить?
-                        {{ form.grade.label }}
+                        Выберете оценку из выпадающего списка:
                         {{ form.grade() }}
                       </div>
                       <div class="modal-footer">
                         <a  class="btn btn-light" data-bs-dismiss="modal">Закрыть</a>
-                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Добавить</button>
+                        <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Добавить</button>
                       </div>
                     </div>
                   </div>
@@ -126,6 +100,7 @@
            {% else %}
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">—</font></font></td>
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">—</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">—</font></font></td>
               <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">—</font></font></td>
               <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">—</font></font></td>
             {% endif %}
