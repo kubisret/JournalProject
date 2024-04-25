@@ -262,6 +262,12 @@ def table_grade(id_class):
                            title=f'{current_class.title}')
 
 
+@blueprint.route('/user_table_grade/<int:id_class>', methods=['POST', 'GET'])
+def user_table_grade(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+
 @blueprint.route('/table_grade/<int:id_class>/<int:id_user>', methods=['POST', 'GET'])
 def new_grade(id_class, id_user):
     db_sess = db_session.create_session()
