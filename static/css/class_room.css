@@ -14,7 +14,7 @@
 }
 
 .class-div-class-room:hover {
-  background-color: rgba(255, 255, 255, 1); /* Цвет дива при наведении */
+  background-color: rgba(248, 249, 250, 1); /* Цвет дива при наведении */
   border: 1px solid rgba(14, 111, 253, 1);
 }
 
