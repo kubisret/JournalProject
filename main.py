@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mailman import Mail
-from blueprints import profile_blueprint
+from blueprints import profile_blueprint, feadback
 from flask_restful import Api
 
 from blueprints import users_blueprint, classes_blueprint
@@ -34,6 +34,7 @@ def main():
     app.register_blueprint(users_blueprint.blueprint)
     app.register_blueprint(classes_blueprint.blueprint)
     app.register_blueprint(profile_blueprint.blueprint)
+    app.register_blueprint(feadback.blueprint)
     app.run()
 
 
