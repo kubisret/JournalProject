@@ -14,13 +14,13 @@
         <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
         <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
     </svg>
-    <h1 class="display-5 fw-bold text-body-emphasis">Centered hero</h1>
+    <h1 class="display-5 fw-bold text-body-emphasis">Электронный журнал</h1>
     <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most
-            popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system,
-            extensive prebuilt components, and powerful JavaScript plugins.</p>
+        <p class="lead mb-4">Создавайте собственные классы и присоединяйтесь к новым с возможностью получать и выставлять оценки, просматривать и добавлять домашнии задания.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            {% if not current_user.is_authenticated %}
             <a class="btn btn-primary btn-lg px-4 gap-3" href="/login" role="button">Войти</a>
+            {% endif %}
             <a class="btn btn-outline-secondary btn-lg px-4" href="#" role="button">Подробнее</a>
         </div>
     </div>
