@@ -278,6 +278,10 @@ def delite_user(id_user, id_class):
     if current_user.id == db_sess.query(Classes).filter(Classes.id == id_class).first().id_owner:
         db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == id_user,
                                                   RelationUserToClass.id_class == id_class).delete()
+        assess = db_sess.query(Assessments).filter(Assessments.id_class == id_class,
+                                                   Assessments.id_student == id_user).all()
+        for i in assess:
+            i.delete()
         db_sess.commit()
 
     return redirect(f'/class/{id_class}')
