@@ -1,7 +1,7 @@
 {% extends "/base_templates/base.html" %}
 
 {% block link_css %}
-    <link rel="stylesheet" href="/static/css/autorization.css">
+    <link rel="stylesheet" href="/static/css/feadback.css">
 {% endblock %}
 
 {% block content %}
@@ -14,10 +14,10 @@
     </svg>
     <br><br>
     <h1 class="h3 mb-3 fw-normal">Напишите сообщение</h1>
-
+    <p>Письмо автоматически отправится на почту администратора.</p>
     <div class="form-floating">
-        {{ form.title(class="form-control", id="label-email-login", type="text", placeholder="name@example.com") }}
-        <label for="label-email-login">Тема</label>
+        {{ form.title(class="form-control", id="label-theme-feadback", type="text", placeholder="name@example.com") }}
+        <label for="label-theme-feadback">Тема письма</label>
         {% for error in form.title.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -25,17 +25,16 @@
             {% endfor %}
     </div>
     <div class="form-floating">
-        {{ form.text(class="form-control", id="label-password-login", type="text", placeholder="Password") }}
-        <label for="label-password-login">Сообщение:</label>
+        {{ form.text(class="form-control", id="label-text-feadback", type="text", placeholder="Password") }}
+        <label for="label-text-feadback">Сообщение</label>
         {% for error in form.text.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>
             {% endfor %}
     </div>
+      <br>
       {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
-      <br>
-      <br>
     <div>
         <p class="fst-italic">{{ message }}</p>
     </div>

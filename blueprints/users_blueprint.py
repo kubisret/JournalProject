@@ -45,7 +45,6 @@ def create_admin():
     admin.is_confirm = 1
     db_sess.add(admin)
     db_sess.commit()
-    is_admin = True
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
