@@ -39,7 +39,7 @@
                 <strong>{{ current_user.name }}</strong>
             </a>
             <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item" href="#">Настройки</a></li>
+                <li><a class="dropdown-item" href="/profile_settings">Настройки</a></li>
                 <li><a class="dropdown-item" href="/profile">Профиль</a></li>
                 <li>
                     <hr class="dropdown-divider">
@@ -50,7 +50,7 @@
     </div>
 
     <div class="container">
-        <p><a class="link-opacity-100" href="/list_classes" style="text-decoration: none;">← Список классов</a></p>
+        <p><a class="link-opacity-100" href="/list_classes" style="text-decoration: none;">← Мои классы</a></p>
         <div class="div-unit-user" onclick="window.location.href='/list_classes'">
             <h3><b>{{ current_class.title }}</b></h3>
             {% if current_class.about %}

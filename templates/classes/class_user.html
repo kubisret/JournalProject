@@ -1,15 +1,15 @@
 {% extends "/base_templates/base_profile.html" %}
 
 {% block link_css %}
-    <link rel="stylesheet" href="/static/css/class_create_join.css">
+<link rel="stylesheet" href="/static/css/class_owner.css">
 {% endblock %}
 
 {% block content_profile %}
 <main class="d-flex flex-nowrap">
     <h1 class="visually-hidden">Sidebars examples</h1>
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px; min-height: 600px">
-        <a href="/list_classes" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <span class="fs-4">Классы</span>
+        <a href="/class_user" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <span class="fs-4">Класс</span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="/class_join" class="nav-link active">
+                <a href="/class_join" class="nav-link link-body-emphasis">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
                       <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z"/>
                       <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>
@@ -43,7 +43,7 @@
             </li>
             <hr>
              <li>
-                <a href="/class_user" class="nav-link link-body-emphasis">
+                <a href="/class_user" class="nav-link active">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
                       <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z"/>
                       <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>
@@ -79,53 +79,31 @@
         </div>
     </div>
 
-    <div class="container" style="width: 50%; float: left; margin: 0;">
-        <main class="d-flex">
-            <div style="width: 100%">
-                <form action="" method="post">
-                    {{ form_join.hidden_tag() }}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor"
-                         class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
-                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
-                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
-                    </svg>
-                    <br><br>
-                    <h3>Присоединение в новый класс</h3>
-                    <div class="form-floating">
-                        {{ form_join.identifier(class="form-control", id="label-identifier-class-join",
-                        type="text", placeholder="Password") }}
-                        <label for="label-key-class-create">Идентификатор</label>
-                        {% for error in form_join.secret_key.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="form-floating">
-                        {{ form_join.secret_key(class="form-control", id="label-key-class-join",
-                        type="text", placeholder="Password") }}
-                        <label for="label-key-class-create">Ключ доступа</label>
-                        {% for error in form_join.secret_key.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <br>
-                    <div class="modal-footer">
-                        {{ form_join.submit(class="btn btn-primary w-100 py-2", type="submit") }}
-                    </div>
-                    <br>
-                    <a class="btn btn-light w-100 py-2" href="/class_create" role="button">Создать новый класс</a>
-                    <br>
-                    <br>
-                    <div>
-                        <p class="fst-italic">{{ message }}</p>
-                    </div>
-                </form>
-            </div>
-        </main>
+    <div class="container">
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">№</font></font></th>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Класс</font></font></th>
+              <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Оценки</font></font></th>
+                <th scope="col"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Средний балл</font></font></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for class, data_class in class_grade.items() %}
+            <tr>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ loop.index }}</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ class_titles[class] }}</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">{{ data_class }}</font></font></td>
+              <td><font style="vertical-align: inherit;"><font style="vertical-align\: inherit;">{{ class_gpa[class] }}</font></font></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+        <br>
+        <br>
     </div>
 </main>
 {% endblock %}

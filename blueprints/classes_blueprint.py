@@ -192,34 +192,66 @@ def classes(id_class):
     db_sess = db_session.create_session()
     current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
 
-    if current_user.id != current_class.id_owner:
-        return redirect('/list_classes')
+    if current_user.id == current_class.id_owner:
+        list_id_user, list_user = [], []
+        for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == current_class.id).all():
+            list_id_user.append(bunch.id_user)
+        for user in db_sess.query(User).all():
+            if user.id in list_id_user:
+                list_user.append(user)
 
-    list_id_user, list_user = [], []
-    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == current_class.id).all():
-        list_id_user.append(bunch.id_user)
-    for user in db_sess.query(User).all():
-        if user.id in list_id_user:
-            list_user.append(user)
+        form = StatusPrivat()
+        if form.validate_on_submit():
+            if current_class.is_privat:
+                current_class.is_privat = 0
+            else:
+                current_class.is_privat = 1
+            db_sess.commit()
+            return redirect(f'/class/{id_class}')
 
-    form = StatusPrivat()
-    if form.validate_on_submit():
-        if current_class.is_privat:
-            current_class.is_privat = 0
-        else:
-            current_class.is_privat = 1
-        db_sess.commit()
-        return redirect(f'/class/{id_class}')
-
-    if current_class.id_owner == current_user.id:
         return render_template('/classes/class/class.html',
                                current_class=current_class,
                                users=list_user,
                                count_users=len(list_user),
                                form=form,
                                title=f'{current_class.title}')
-    else:
-        pass
+
+    return redirect('/list_classes')
+
+
+@blueprint.route('/class_user', methods=['POST', 'GET'])
+def user_table_grade():
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+
+    # Получение всех связок: id_class - id_user
+    all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
+
+    # Словари вида: класс - данные из класса
+    class_grade, class_gpa, class_titles = {}, {}, {}
+    for bunch_class in all_class_user:
+        user_grade, user_gpa = '', ''
+        for bunch in db_sess.query(Assessments).filter(Assessments.id_class == bunch_class.id_class,
+                                                       Assessments.id_student == bunch_class.id_user).all():
+            user_grade += f'{bunch.value} '
+
+        if not user_grade:
+            user_grade = '—'
+            user_gpa = '—'
+        else:
+            user_gpa = GPA(list(map(int, user_grade.rstrip().split())))
+        class_grade[bunch_class.id_class] = user_grade
+        class_gpa[bunch_class.id_class] = user_gpa
+        class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
+            Classes.id == bunch_class.id_class).first().title
+
+    return render_template('/classes/class_user.html',
+                           class_grade=class_grade,
+                           class_titles=class_titles,
+                           class_gpa=class_gpa,
+                           title=f'Оценки')
 
 
 @blueprint.route('/table_grade/<int:id_class>', methods=['POST', 'GET'])
@@ -262,12 +294,6 @@ def table_grade(id_class):
                            title=f'{current_class.title}')
 
 
-@blueprint.route('/user_table_grade/<int:id_class>', methods=['POST', 'GET'])
-def user_table_grade(id_class):
-    if not current_user.is_authenticated:
-        return redirect('/login')
-
-
 @blueprint.route('/table_grade/<int:id_class>/<int:id_user>', methods=['POST', 'GET'])
 def new_grade(id_class, id_user):
     db_sess = db_session.create_session()
@@ -291,7 +317,7 @@ def delite_user(id_user, id_class):
         db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == id_user,
                                                   RelationUserToClass.id_class == id_class).delete()
         db_sess.query(Assessments).filter(Assessments.id_class == id_class,
-                                                   Assessments.id_student == id_user).delete()
+                                          Assessments.id_student == id_user).delete()
         db_sess.commit()
 
     return redirect(f'/class/{id_class}')
