@@ -81,7 +81,6 @@ def reqister():
     if current_user.is_authenticated:
         return redirect("/index")
 
-
     form = RegisterForm()
     if request.method == 'POST':
         response = requests.post(f'http://{config["domen"]}:5000/api/register', data=request.form)
