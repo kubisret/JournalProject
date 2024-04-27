@@ -215,7 +215,6 @@ def user_table_grade():
 
     # Получение всех связок: id_class - id_user
     all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
-    print([i.id_class for i in all_class_user])
 
     # Словари вида: класс - данные из класса
     class_grade, class_gpa, class_titles = {}, {}, {}
@@ -232,9 +231,6 @@ def user_table_grade():
             user_gpa = GPA(list(map(int, user_grade.rstrip().split())))
         class_grade[bunch_class.id_class] = user_grade
         class_gpa[bunch_class.id_class] = user_gpa
-        print(bunch_class.id_class)
-        print(db_sess.query(Classes).filter(
-            Classes.id == bunch_class.id_class).first())
 
         class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
             Classes.id == bunch_class.id_class).first().title
@@ -365,4 +361,22 @@ def create_home_work(id_class):
     return render_template('/classes/class/home_work.html',
                            form=form,
                            current_class=current_class,
+                           title=f'Добавление домашнего задания')
+
+
+@blueprint.route('/view_home_work', methods=['POST', 'GET'])
+def create_home_work():
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    # Получение всех связок: id_class - id_user
+    all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
+    class_titles = {}
+    for bunch_class in all_class_user:
+        class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
+            Classes.id == bunch_class.id_class).first().title
+
+    return render_template('/classes/class/home_work.html',
+                           class_titles=class_titles,
                            title=f'Добавление домашнего задания')
