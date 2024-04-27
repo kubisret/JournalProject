@@ -179,6 +179,12 @@ def class_delete(id_class):
         return make_response(404)
     if current_user.id != classes.id_owner:
         return redirect('/')
+    relations = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id).all()
+    for i in relations:
+        db_sess.delete(i)
+    assessments = db_sess.query(Assessments).filter(Assessments.id_class == classes.id).all()
+    for i in assessments:
+        db_sess.delete(i)
     db_sess.delete(classes)
     db_sess.commit()
     return redirect('/')
