@@ -19,15 +19,19 @@ with open('config.json', 'r', encoding='utf-8') as config_file:
 
 @blueprint.route('/profile')
 def profile():
+    if not current_user.is_authenticated:
+        return redirect("/index")
+
     return render_template('/profile/profile.html',
                            title='Профиль')
 
 
 @blueprint.route('/profile_settings', methods=['GET', 'POST'])
 def profile_settings():
+    if not current_user.is_authenticated:
+        return redirect("/index")
 
     form = ProfileSettings()
-
     if form.validate_on_submit():
 
         db_sess = db_session.create_session()
@@ -52,6 +56,9 @@ def profile_settings():
 
 @blueprint.route('/new_password', methods=['GET', 'POST'])
 def new_password():
+    if not current_user.is_authenticated:
+        return redirect("/index")
+
     form = NewPassword()
     if form.validate_on_submit():
         db_sess = db_session.create_session()

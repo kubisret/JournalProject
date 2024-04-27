@@ -5,11 +5,13 @@ from flask_login import current_user
 from data import db_session
 from data.models.assessments import Assessments
 from data.models.classes import Classes
+from data.models.homework import Homework
 from data.models.relation_model import RelationUserToClass
 from data.models.users import User
 from forms.class_form import ClassForm
 from forms.class_join_form import ClassJoinForm
 from forms.grade_form import GradeForm
+from forms.home_work import HomeWork
 from forms.status_class_privat import StatusPrivat
 from tools.check_validate import check_validate_identifier
 from tools.data_class_room import create_default_identifier, create_default_key
@@ -169,21 +171,6 @@ def class_edit(id_class):
     return render_template('classes/class_form.html', form=form, title='Редактирование класса')
 
 
-@blueprint.route('/class_delete/<int:id_class>', methods=['POST', 'GET'])
-def class_delete(id_class):
-    if not current_user.is_authenticated:
-        return redirect('/login')
-    db_sess = db_session.create_session()
-    classes = db_sess.query(Classes).get(id_class)
-    if not classes:
-        return make_response(404)
-    if current_user.id != classes.id_owner:
-        return redirect('/')
-    db_sess.delete(classes)
-    db_sess.commit()
-    return redirect('/')
-
-
 @blueprint.route('/class/<int:id_class>', methods=['POST', 'GET'])
 def classes(id_class):
     if not current_user.is_authenticated:
@@ -228,6 +215,7 @@ def user_table_grade():
 
     # Получение всех связок: id_class - id_user
     all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
+    print([i.id_class for i in all_class_user])
 
     # Словари вида: класс - данные из класса
     class_grade, class_gpa, class_titles = {}, {}, {}
@@ -244,6 +232,10 @@ def user_table_grade():
             user_gpa = GPA(list(map(int, user_grade.rstrip().split())))
         class_grade[bunch_class.id_class] = user_grade
         class_gpa[bunch_class.id_class] = user_gpa
+        print(bunch_class.id_class)
+        print(db_sess.query(Classes).filter(
+            Classes.id == bunch_class.id_class).first())
+
         class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
             Classes.id == bunch_class.id_class).first().title
 
@@ -310,6 +302,25 @@ def new_grade(id_class, id_user):
         return redirect(f'/table_grade/{id_class}')
 
 
+@blueprint.route('/class_delete/<int:id_class>', methods=['POST', 'GET'])
+def class_delete(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    classes = db_sess.query(Classes).get(id_class)
+
+    if not classes:
+        return make_response(404)
+
+    if current_user.id != classes.id_owner:
+        return redirect('/')
+
+    db_sess.delete(classes)
+    db_sess.commit()
+    return redirect('/list_classes')
+
+
 @blueprint.route('/delete_user/<id_user>/<id_class>', methods=['POST', 'GET'])
 def delite_user(id_user, id_class):
     db_sess = db_session.create_session()
@@ -321,3 +332,37 @@ def delite_user(id_user, id_class):
         db_sess.commit()
 
     return redirect(f'/class/{id_class}')
+
+
+@blueprint.route('/create_home_work/<id_class>', methods=['POST', 'GET'])
+def create_home_work(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+
+    if current_user.id != current_class.id_owner:
+        return redirect('/')
+
+    form = HomeWork()
+    if form.validate_on_submit():
+        home_work = Homework()
+        home_work.text = form.text.data
+        home_work.date = form.date.data
+        home_work.file = form.file.data
+        home_work.recipient = form.recipient.data
+        db_sess.add(home_work)
+        db_sess.commit()
+
+    choices = [('', '—')]
+    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == id_class).all():
+        choices.append((bunch.id_user,
+                        f'''{db_sess.query(User).filter(User.id == bunch.id_user).first().name} 
+                        {db_sess.query(User).filter(User.id == bunch.id_user).first().surname}'''))
+    form.recipient.choices = choices
+
+    return render_template('/classes/class/home_work.html',
+                           form=form,
+                           current_class=current_class,
+                           title=f'Добавление домашнего задания')
