@@ -330,13 +330,14 @@ def delite_user(id_user, id_class):
     return redirect(f'/class/{id_class}')
 
 
-@blueprint.route('/create_home_work/<id_class>', methods=['POST', 'GET'])
+@blueprint.route('/create_home_work/<int:id_class>', methods=['POST', 'GET'])
 def create_home_work(id_class):
     if not current_user.is_authenticated:
         return redirect('/login')
 
     db_sess = db_session.create_session()
     current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
+    print(current_class)
 
     if current_user.id != current_class.id_owner:
         return redirect('/')
@@ -351,7 +352,7 @@ def create_home_work(id_class):
         db_sess.add(home_work)
         db_sess.commit()
 
-    choices = [('', '—')]
+    choices = [('', 'Весь класс')]
     for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == id_class).all():
         choices.append((bunch.id_user,
                         f'''{db_sess.query(User).filter(User.id == bunch.id_user).first().name} 
@@ -365,7 +366,7 @@ def create_home_work(id_class):
 
 
 @blueprint.route('/view_home_work', methods=['POST', 'GET'])
-def create_home_work():
+def view_home_work():
     if not current_user.is_authenticated:
         return redirect('/login')
 
@@ -373,10 +374,29 @@ def create_home_work():
     # Получение всех связок: id_class - id_user
     all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
     class_titles = {}
+    class_home_work_text = {}
+    class_home_work_date = {}
+    class_home_work_file = {}
+    class_home_work_user = {}
     for bunch_class in all_class_user:
         class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
             Classes.id == bunch_class.id_class).first().title
+        try:
+            class_home_work_text[bunch_class.id_class] = db_sess.query(Homework).filter(
+                Homework.id_class == bunch_class.id_class).all()
+            class_home_work_date[bunch_class.id_class] = db_sess.query(Homework).filter(
+                Homework.id_class == bunch_class.id_class).all()
+            class_home_work_file[bunch_class.id_class] = db_sess.query(Homework).filter(
+                Homework.id_class == bunch_class.id_class).all()
+            class_home_work_user[bunch_class.id_class] = db_sess.query(Homework).filter(
+                Homework.id_class == bunch_class.id_class).all()
+        except Exception:
+            pass
 
-    return render_template('/classes/class/home_work.html',
+    return render_template('/classes/class/view_home_work.html',
                            class_titles=class_titles,
+                           class_home_work_text=class_home_work_text,
+                           class_home_work_date=class_home_work_date,
+                           class_home_work_file=class_home_work_file,
+                           class_home_work_user=class_home_work_user,
                            title=f'Добавление домашнего задания')
