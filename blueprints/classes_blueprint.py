@@ -191,7 +191,7 @@ def class_delete(id_class):
         db_sess.delete(i)
     db_sess.delete(classes)
     db_sess.commit()
-    return redirect('/')
+    return redirect('/list_classes')
 
 
 @blueprint.route('/class/<int:id_class>', methods=['POST', 'GET'])
@@ -385,10 +385,18 @@ def view_home_work():
     # Получение всех связок: id_class - id_user
     all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
     class_titles = {}
+    class_home_work = {}
     for bunch_class in all_class_user:
         class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
             Classes.id == bunch_class.id_class).first().title
 
-    return render_template('/classes/class/home_work.html',
+        class_home_work[bunch_class.id_class] = db_sess.query(Homework).filter(
+            Homework.id_class == bunch_class.id_class).all()
+
+    for key, val in class_home_work.items():
+        print()
+
+    return render_template('/classes/view_home_work.html',
                            class_titles=class_titles,
+                           class_home_work=class_home_work,
                            title=f'Добавление домашнего задания')
