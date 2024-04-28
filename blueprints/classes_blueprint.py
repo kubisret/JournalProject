@@ -171,6 +171,27 @@ def class_edit(id_class):
     return render_template('classes/class_form.html', form=form, title='Редактирование класса')
 
 
+@blueprint.route('/class_delete/<int:id_class>', methods=['POST', 'GET'])
+def class_delete(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+    db_sess = db_session.create_session()
+    classes = db_sess.query(Classes).get(id_class)
+    if not classes:
+        return make_response(404)
+    if current_user.id != classes.id_owner:
+        return redirect('/')
+    relations = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id).all()
+    for i in relations:
+        db_sess.delete(i)
+    assessments = db_sess.query(Assessments).filter(Assessments.id_class == classes.id).all()
+    for i in assessments:
+        db_sess.delete(i)
+    db_sess.delete(classes)
+    db_sess.commit()
+    return redirect('/')
+
+
 @blueprint.route('/class/<int:id_class>', methods=['POST', 'GET'])
 def classes(id_class):
     if not current_user.is_authenticated:
@@ -296,25 +317,6 @@ def new_grade(id_class, id_user):
         db_sess.add(assessment)
         db_sess.commit()
         return redirect(f'/table_grade/{id_class}')
-
-
-@blueprint.route('/class_delete/<int:id_class>', methods=['POST', 'GET'])
-def class_delete(id_class):
-    if not current_user.is_authenticated:
-        return redirect('/login')
-
-    db_sess = db_session.create_session()
-    classes = db_sess.query(Classes).get(id_class)
-
-    if not classes:
-        return make_response(404)
-
-    if current_user.id != classes.id_owner:
-        return redirect('/')
-
-    db_sess.delete(classes)
-    db_sess.commit()
-    return redirect('/list_classes')
 
 
 @blueprint.route('/delete_user/<id_user>/<id_class>', methods=['POST', 'GET'])
