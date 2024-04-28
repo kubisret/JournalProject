@@ -11,5 +11,5 @@ class HomeWork(FlaskForm):
     text = TextAreaField('Текст задания', validators=[DataRequired()])
     date = DateField('Крайний срок сдачи', format='%Y-%m-%d', validators=[DataRequired()])
     file = FileField('Прикрепите файл')
-    recipient = SelectField('Получатель задания', choices=[])
+    recipient = SelectField('Получатель задания', choices=[('—', 'Весь класс')], default='—')
     submit = SubmitField('Выложить')

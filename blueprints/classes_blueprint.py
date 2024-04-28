@@ -332,7 +332,7 @@ def delite_user(id_user, id_class):
     return redirect(f'/class/{id_class}')
 
 
-@blueprint.route('/create_home_work/<id_class>', methods=['POST', 'GET'])
+@blueprint.route('/create_home_work/<int:id_class>', methods=['POST', 'GET'])
 def create_home_work(id_class):
     if not current_user.is_authenticated:
         return redirect('/login')
@@ -344,21 +344,22 @@ def create_home_work(id_class):
         return redirect('/')
 
     form = HomeWork()
+    choices = form.recipient.choices
+    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == id_class).all():
+        choices.append((bunch.id_user,
+                        f'''{db_sess.query(User).filter(User.id == bunch.id_user).first().name} 
+                            {db_sess.query(User).filter(User.id == bunch.id_user).first().surname}'''))
+    form.recipient.choices = choices
+
     if form.validate_on_submit():
         home_work = Homework()
         home_work.text = form.text.data
         home_work.date = form.date.data
-        home_work.file = form.file.data
+        # home_work.file = form.file.data
         home_work.recipient = form.recipient.data
+        home_work.id_class = current_class.id
         db_sess.add(home_work)
         db_sess.commit()
-
-    choices = [('', '—')]
-    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == id_class).all():
-        choices.append((bunch.id_user,
-                        f'''{db_sess.query(User).filter(User.id == bunch.id_user).first().name} 
-                        {db_sess.query(User).filter(User.id == bunch.id_user).first().surname}'''))
-    form.recipient.choices = choices
 
     return render_template('/classes/class/home_work.html',
                            form=form,
@@ -367,7 +368,7 @@ def create_home_work(id_class):
 
 
 @blueprint.route('/view_home_work', methods=['POST', 'GET'])
-def create_home_work():
+def view_home_work():
     if not current_user.is_authenticated:
         return redirect('/login')
 
