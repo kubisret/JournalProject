@@ -1,4 +1,6 @@
 import json
+import os
+
 import flask
 from flask import redirect, render_template, make_response
 from flask_login import current_user
@@ -171,6 +173,27 @@ def class_edit(id_class):
     return render_template('classes/class_form.html', form=form, title='Редактирование класса')
 
 
+@blueprint.route('/class_delete/<int:id_class>', methods=['POST', 'GET'])
+def class_delete(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+    db_sess = db_session.create_session()
+    classes = db_sess.query(Classes).get(id_class)
+    if not classes:
+        return make_response(404)
+    if current_user.id != classes.id_owner:
+        return redirect('/')
+    relations = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id).all()
+    for i in relations:
+        db_sess.delete(i)
+    assessments = db_sess.query(Assessments).filter(Assessments.id_class == classes.id).all()
+    for i in assessments:
+        db_sess.delete(i)
+    db_sess.delete(classes)
+    db_sess.commit()
+    return redirect('/')
+
+
 @blueprint.route('/class/<int:id_class>', methods=['POST', 'GET'])
 def classes(id_class):
     if not current_user.is_authenticated:
@@ -298,25 +321,6 @@ def new_grade(id_class, id_user):
         return redirect(f'/table_grade/{id_class}')
 
 
-@blueprint.route('/class_delete/<int:id_class>', methods=['POST', 'GET'])
-def class_delete(id_class):
-    if not current_user.is_authenticated:
-        return redirect('/login')
-
-    db_sess = db_session.create_session()
-    classes = db_sess.query(Classes).get(id_class)
-
-    if not classes:
-        return make_response(404)
-
-    if current_user.id != classes.id_owner:
-        return redirect('/')
-
-    db_sess.delete(classes)
-    db_sess.commit()
-    return redirect('/list_classes')
-
-
 @blueprint.route('/delete_user/<id_user>/<id_class>', methods=['POST', 'GET'])
 def delite_user(id_user, id_class):
     db_sess = db_session.create_session()
@@ -337,27 +341,34 @@ def create_home_work(id_class):
 
     db_sess = db_session.create_session()
     current_class = db_sess.query(Classes).filter(Classes.id == id_class).first()
-    print(current_class)
 
     if current_user.id != current_class.id_owner:
         return redirect('/')
 
     form = HomeWork()
+    choices = form.recipient.choices
+    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == id_class).all():
+        choices.append((bunch.id_user,
+                        f'''{db_sess.query(User).filter(User.id == bunch.id_user).first().name} 
+                            {db_sess.query(User).filter(User.id == bunch.id_user).first().surname}'''))
+    form.recipient.choices = choices
+
     if form.validate_on_submit():
         home_work = Homework()
         home_work.text = form.text.data
         home_work.date = form.date.data
-        home_work.file = form.file.data
         home_work.recipient = form.recipient.data
+        home_work.id_class = current_class.id
         db_sess.add(home_work)
         db_sess.commit()
-
-    choices = [('', 'Весь класс')]
-    for bunch in db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == id_class).all():
-        choices.append((bunch.id_user,
-                        f'''{db_sess.query(User).filter(User.id == bunch.id_user).first().name} 
-                        {db_sess.query(User).filter(User.id == bunch.id_user).first().surname}'''))
-    form.recipient.choices = choices
+        if not os.path.exists('static/homework'):
+            os.makedirs('static/homework')
+        if form.file.data:
+            homework = db_sess.query(Homework).filter(Homework.id == home_work.id).first()
+            path_file = f'{homework.id}.{form.file.data.filename.split(".")[1]}'
+            homework.file_name = path_file
+            form.file.data.save(f'static/homework/{path_file}')
+            db_sess.commit()
 
     return render_template('/classes/class/home_work.html',
                            form=form,
@@ -374,29 +385,10 @@ def view_home_work():
     # Получение всех связок: id_class - id_user
     all_class_user = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_user == current_user.id).all()
     class_titles = {}
-    class_home_work_text = {}
-    class_home_work_date = {}
-    class_home_work_file = {}
-    class_home_work_user = {}
     for bunch_class in all_class_user:
         class_titles[bunch_class.id_class] = db_sess.query(Classes).filter(
             Classes.id == bunch_class.id_class).first().title
-        try:
-            class_home_work_text[bunch_class.id_class] = db_sess.query(Homework).filter(
-                Homework.id_class == bunch_class.id_class).all()
-            class_home_work_date[bunch_class.id_class] = db_sess.query(Homework).filter(
-                Homework.id_class == bunch_class.id_class).all()
-            class_home_work_file[bunch_class.id_class] = db_sess.query(Homework).filter(
-                Homework.id_class == bunch_class.id_class).all()
-            class_home_work_user[bunch_class.id_class] = db_sess.query(Homework).filter(
-                Homework.id_class == bunch_class.id_class).all()
-        except Exception:
-            pass
 
-    return render_template('/classes/class/view_home_work.html',
+    return render_template('/classes/class/home_work.html',
                            class_titles=class_titles,
-                           class_home_work_text=class_home_work_text,
-                           class_home_work_date=class_home_work_date,
-                           class_home_work_file=class_home_work_file,
-                           class_home_work_user=class_home_work_user,
                            title=f'Добавление домашнего задания')
