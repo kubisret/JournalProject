@@ -1,4 +1,6 @@
 import json
+import os
+
 import flask
 from flask import redirect, render_template, make_response
 from flask_login import current_user
@@ -355,11 +357,18 @@ def create_home_work(id_class):
         home_work = Homework()
         home_work.text = form.text.data
         home_work.date = form.date.data
-        # home_work.file = form.file.data
         home_work.recipient = form.recipient.data
         home_work.id_class = current_class.id
         db_sess.add(home_work)
         db_sess.commit()
+        if not os.path.exists('static/homework'):
+            os.makedirs('static/homework')
+        if form.file.data:
+            homework = db_sess.query(Homework).filter(Homework.id == home_work.id).first()
+            path_file = f'{homework.id}.{form.file.data.filename.split(".")[1]}'
+            homework.file_name = path_file
+            form.file.data.save(f'static/homework/{path_file}')
+            db_sess.commit()
 
     return render_template('/classes/class/home_work.html',
                            form=form,
