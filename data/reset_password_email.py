@@ -11,10 +11,12 @@ def send_reset_password_email(user, config):
         _external=True,
     )
 
+    # создаём сообщение
     email_body = render_template_string(
         reset_password_email_html_content, reset_password_url=reset_password_url
     )
 
+    # отправляем сообщение
     message = EmailMessage(
         subject="Сброс пароля",
         body=email_body,

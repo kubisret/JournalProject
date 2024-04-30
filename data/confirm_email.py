@@ -11,10 +11,12 @@ def send_confirm_email(user, config):
         _external=True,
     )
 
+    # создаём сообщение
     email_body = render_template_string(
         confirm_email_html_content, confirm_url=confirm_url
     )
 
+    # отправляем сообщение
     message = EmailMessage(
         subject="Подтверждение почты",
         body=email_body,

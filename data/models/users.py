@@ -24,11 +24,13 @@ class User(SqlAlchemyBase, UserMixin):
         return check_password_hash(self.hashed_password, password)
 
     def generate_token(self, config):
+        # генерация токена для безопасного восстановления пароля/подтверждения почты
         serializer = URLSafeTimedSerializer(config["SECRET_KEY"])
         return serializer.dumps(self.email, salt=self.hashed_password)
 
     @staticmethod
     def validate_token(token: str, user_id: int, db_sess, config):
+        # проверка валидности токена при сбросе пароля
         user = db_sess.query(User).get(user_id)
 
         if user is None:

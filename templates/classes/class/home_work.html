@@ -1,0 +1,126 @@
+{% extends "/base_templates/base_profile.html" %}
+
+{% block link_css %}
+<link rel="stylesheet" href="/static/css/home_work.css">
+{% endblock %}
+
+{% block content_profile %}
+<main class="d-flex flex-nowrap">
+    <h1 class="visually-hidden">Sidebars examples</h1>
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px; min-height: 600px">
+        <a href="/class/{{ current_class.id }}"
+           class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <span class="fs-4">Класс</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="/class/{{ current_class.id }}" class="nav-link link-body-emphasis" aria-current="page">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-house-door" viewBox="0 0 16 16">
+                        <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"/>
+                    </svg>
+                    Главная
+                </a>
+            </li>
+            <li>
+                <a href="/table_grade/{{ current_class.id }}" class="nav-link link-body-emphasis">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-table" viewBox="0 0 16 16">
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z"/>
+                    </svg>
+                    Таблица
+                </a>
+            </li>
+            <li>
+                <a href="/create_home_work/{{ current_class.id }}" class="nav-link active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
+                      <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                      <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    Домашнее задание
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                <strong>{{ current_user.name }}</strong>
+            </a>
+            <ul class="dropdown-menu text-small shadow">
+                <li><a class="dropdown-item" href="/profile_settings">Настройки</a></li>
+                <li><a class="dropdown-item" href="/profile">Профиль</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="/logout">Выйти</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container" style="width: 50%; float: left; margin: 0;">
+        <p><a class="link-opacity-100" href="/list_classes" style="text-decoration: none;">← Мои классы</a></p>
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor"
+                 class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
+                <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
+                <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
+            </svg>
+            <br><br>
+            <h1 class="h3 mb-3 fw-normal">Добавление домашнего задания</h1>
+            <div class="form-floating">
+                {{ form.text(class="form-control", id="label-text-home-work", type="text",
+                placeholder="name@example.com")
+                }}
+                <label for="label-text-home-work">Текст задания</label>
+                {% for error in form.text.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-floating">
+                {{ form.date(class="form-control", id="label-date-home-work", type="date",
+                placeholder="name@example.com")
+                }}
+                <label for="label-date-home-work">Крайний срок выполнения</label>
+                {% for error in form.date.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-floating">
+                {{ form.file(class="form-control", id="label-file-home-work", type="file",
+                placeholder="name@example.com")
+                }}
+                <label for="label-file-home-work">Прикрепите файл (необязательно)</label>
+                {% for error in form.file.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-floating">
+                {{ form.recipient(class="form-control", id="label-recipient-home-work", type="еуче",
+                placeholder="name@example.com")
+                }}
+                <label for="label-recipient-home-work">Получатель (если требуется)</label>
+                {% for error in form.recipient.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            </div>
+            <br>
+            {{ form.submit(class="btn btn-primary w-100 py-2", type="submit") }}
+            <div>
+                <p class="fst-italic">{{ message }}</p>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

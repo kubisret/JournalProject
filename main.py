@@ -12,6 +12,7 @@ from data.models.users import User
 
 app = Flask(__name__)
 
+# загрузка настроек для приложения
 with open('config.json', 'r', encoding='utf-8') as config_file:
     config = json.load(config_file)
     for key, val in config.items():
