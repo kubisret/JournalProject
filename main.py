@@ -4,7 +4,6 @@ from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mailman import Mail
 from blueprints import profile_blueprint, feadback
-from flask_restful import Api
 
 from blueprints import users_blueprint, classes_blueprint
 from blueprints.api import users_api
@@ -13,7 +12,6 @@ from data.models.users import User
 
 
 app = Flask(__name__)
-api = Api(app)
 
 
 # загрузка настроек для приложения
