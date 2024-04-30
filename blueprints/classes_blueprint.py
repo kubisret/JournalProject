@@ -177,20 +177,30 @@ def class_edit(id_class):
 def class_delete(id_class):
     if not current_user.is_authenticated:
         return redirect('/login')
+
     db_sess = db_session.create_session()
     classes = db_sess.query(Classes).get(id_class)
     if not classes:
         return make_response(404)
+
     if current_user.id != classes.id_owner:
         return redirect('/')
+
     relations = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id).all()
-    for i in relations:
-        db_sess.delete(i)
+    for _ in relations:
+        db_sess.delete(_)
+
     assessments = db_sess.query(Assessments).filter(Assessments.id_class == classes.id).all()
-    for i in assessments:
-        db_sess.delete(i)
+    for _ in assessments:
+        db_sess.delete(_)
+
+    home_work = db_sess.query(Homework).filter(Homework.id_class == classes.id).all()
+    for _ in home_work:
+        db_sess.delete(_)
+
     db_sess.delete(classes)
     db_sess.commit()
+
     return redirect('/list_classes')
 
 
@@ -393,10 +403,32 @@ def view_home_work():
         class_home_work[bunch_class.id_class] = db_sess.query(Homework).filter(
             Homework.id_class == bunch_class.id_class).all()
 
-    for key, val in class_home_work.items():
-        print()
+    print(class_home_work)
 
     return render_template('/classes/view_home_work.html',
                            class_titles=class_titles,
                            class_home_work=class_home_work,
                            title=f'Добавление домашнего задания')
+
+
+@blueprint.route('/class_home_work/<int:id_class>', methods=['POST', 'GET'])
+def class_home_work(id_class):
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    db_sess = db_session.create_session()
+    if not db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
+                                                 RelationUserToClass.id_user == current_user.id).first():
+        return redirect('/list_classes')
+
+    # Получение всех связок: id_class - id_user
+    class_title = db_sess.query(Classes).filter(
+        Classes.id == id_class).first().title
+
+    class_home_works = db_sess.query(Homework).filter(
+        Homework.id_class == id_class).all()[::-1]
+
+    return render_template('/classes/class_home_work.html',
+                           class_title=class_title,
+                           class_home_works=class_home_works,
+                           title=f'Просмотр домашнего задания')

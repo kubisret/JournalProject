@@ -83,10 +83,24 @@
     </div>
 
     <div class="container">
-        <h3>Просмотр домашнего задания</h3>
+        <p><a class="link-opacity-100" href="/view_home_work" style="text-decoration: none;">← Назад</a></p>
+        <h3>Просмотр домашнего задания {{ class_title }}</h3>
         <div class="table-responsive">
-            {% for key, val in class_titles.items() %}
-             <p><a class="link-opacity-100" href="/class_home_work/{{ key }}" style="text-decoration: none;">{{ val }}</a></p>
+            {% for hw in class_home_works %}
+                <div>
+                    {% if hw.recipient == current_user.id or hw.recipient == '—' %}
+                    <div>
+                        <b>Текст задания:</b> {{ hw.text }}
+                    </div>
+                    <div>
+                        <b>Крайний срок выполнения:</b> {{ hw.date }}
+                    </div>
+                    <div>
+                        <b>Файл:</b> {{ hw.file_name }}
+                    </div>
+                    <br>
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
         <br>
