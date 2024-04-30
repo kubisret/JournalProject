@@ -88,7 +88,7 @@
         <div class="table-responsive">
             {% for hw in class_home_works %}
                 <div>
-                    {% if hw.recipient == current_user.id or hw.recipient == '—' %}
+                    {% if hw.recipient == id_user or hw.recipient == '—' %}
                     <div>
                         <b>Текст задания:</b> {{ hw.text }}
                     </div>

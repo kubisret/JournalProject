@@ -403,8 +403,6 @@ def view_home_work():
         class_home_work[bunch_class.id_class] = db_sess.query(Homework).filter(
             Homework.id_class == bunch_class.id_class).all()
 
-    print(class_home_work)
-
     return render_template('/classes/view_home_work.html',
                            class_titles=class_titles,
                            class_home_work=class_home_work,
@@ -428,7 +426,10 @@ def class_home_work(id_class):
     class_home_works = db_sess.query(Homework).filter(
         Homework.id_class == id_class).all()[::-1]
 
+    id_user = str(current_user.id)
+
     return render_template('/classes/class_home_work.html',
                            class_title=class_title,
                            class_home_works=class_home_works,
+                           id_user=id_user,
                            title=f'Просмотр домашнего задания')
