@@ -1,0 +1,6 @@
+SQLAlchemy~=2.0.28
+flask~=3.0.2
+requests~=2.31.0
+Flask-Login~=0.6.3
+flask-mailman~=1.0.0
+Flask-WTF~=1.2.1
