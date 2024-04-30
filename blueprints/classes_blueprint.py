@@ -37,6 +37,7 @@ def list_classes():
     if not current_user.is_confirm:
         return redirect('/')
 
+    # отображаем только те классы в которых состоит/управляет пользователь
     db_sess = db_session.create_session()
     classes_create = db_sess.query(Classes).filter(Classes.id_owner == current_user.id).all()[::-1]
 
@@ -66,7 +67,7 @@ def class_create():
         classes.title = form.title.data
         classes.about = form.about.data
         classes.id_owner = current_user.id
-
+        # если идентификатор не создан пользователем, то он создаётся автоматически
         if form.identifier.data == '':
             list_identifier = db_sess.query(Classes).filter(Classes.identifier).all()
             classes.identifier = create_default_identifier()
@@ -81,6 +82,7 @@ def class_create():
                                        message='Идентификатор должен содержать только цифры',
                                        form=form)
 
+        # если секретный ключ не создан пользователем, то он создаётся автоматически
         if form.secret_key.data == '':
             classes.secret_key = create_default_key()
         else:
@@ -186,6 +188,7 @@ def class_delete(id_class):
     if current_user.id != classes.id_owner:
         return redirect('/')
 
+    # если класс удалён, то удаляем все остальные записи связанные с этим классом
     relations = db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == classes.id).all()
     for _ in relations:
         db_sess.delete(_)
@@ -403,8 +406,6 @@ def view_home_work():
         class_home_work[bunch_class.id_class] = db_sess.query(Homework).filter(
             Homework.id_class == bunch_class.id_class).all()
 
-    print(class_home_work)
-
     return render_template('/classes/view_home_work.html',
                            class_titles=class_titles,
                            class_home_work=class_home_work,
@@ -418,7 +419,7 @@ def class_home_work(id_class):
 
     db_sess = db_session.create_session()
     if not db_sess.query(RelationUserToClass).filter(RelationUserToClass.id_class == Classes.id,
-                                                 RelationUserToClass.id_user == current_user.id).first():
+                                                     RelationUserToClass.id_user == current_user.id).first():
         return redirect('/list_classes')
 
     # Получение всех связок: id_class - id_user

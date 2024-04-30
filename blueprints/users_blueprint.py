@@ -82,6 +82,7 @@ def reqister():
 
     form = RegisterForm()
     if request.method == 'POST':
+        # отправляем запрос на api для регистрации и регистрируем пользователя
         response = requests.post(f'http://{config["domen"]}:5000/api/register', data=request.form)
         if response.status_code == 201:
             return redirect('/login')
@@ -123,6 +124,7 @@ def reset_password(token, user_id):
     if current_user.is_authenticated:
         return redirect("/index")
     db_sess = db_session.create_session()
+    # разбираем токен и проверяем на валидность юзера
     user = User.validate_token(token, user_id, db_sess, config)
     if not user:
         return render_template(
@@ -182,6 +184,7 @@ def confirm_email_request():
 @blueprint.route("/confirm_email/<token>/<int:user_id>", methods=["GET", "POST"])
 def confirm_email(token, user_id):
     db_sess = db_session.create_session()
+    # разбираем токен и проверяем на валидность юзера
     user = User.validate_token(token, user_id, db_sess, config)
     if not user:
         return render_template(

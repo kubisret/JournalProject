@@ -33,6 +33,7 @@ def feadback():
                                             text=form.text.data,
                                             email=current_user.email,
                                             name=current_user.name)
+        # отправляем письмо администратору
         message = EmailMessage(
             subject=form.title.data,
             body=email_body,
@@ -60,6 +61,7 @@ def feadback_by_teacher(class_id):
                                                 text=form.text.data,
                                                 email=current_user.email,
                                                 name=current_user.name)
+            # отправляем письмо учителю от ученика
             message = EmailMessage(
                 subject=form.title.data,
                 body=email_body,

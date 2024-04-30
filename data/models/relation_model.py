@@ -6,6 +6,7 @@ from sqlalchemy import orm
 class RelationUserToClass(SqlAlchemyBase):
     __tablename__ = 'relation_user_to_class'
 
+    # модель описывающая отношение многим к многим таблиц User и Classes
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     id_class = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('classes.id'))
     id_user = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
