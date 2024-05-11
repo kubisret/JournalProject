@@ -4,3 +4,5 @@ requests
 Flask-Login
 flask-mailman
 Flask-WTF
+urllib3==1.26.6
+email_validator
