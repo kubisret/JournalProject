@@ -96,7 +96,7 @@
                         <b>Крайний срок выполнения:</b> {{ hw.date }}
                     </div>
                     <div>
-                        <b>Файл:</b> {{ hw.file_name }}
+                        <b>Файл:</b> <a href="/static/homework/{{ hw.file_name}}" download>{{ hw.file_name }}</a>
                     </div>
                     <br>
                     {% endif %}
